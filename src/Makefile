@@ -2,7 +2,7 @@ OCAML=ocamlopt
 OCAMLFLAGS=
 OCAMLLD=
 EXEC= out
-SRC= main.ml
+SRC= iostream.ml main.ml
 OBJ= $(SRC:.ml=.cmx)
 MLI=
  
@@ -18,4 +18,4 @@ rmobj:
 	rm -f *~ *.o *.cm?
 
 clean: rmobj
-	rm ${EXEC}
+	rm -f ${EXEC}
