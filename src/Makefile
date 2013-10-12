@@ -1,8 +1,8 @@
 OCAML=ocamlopt
 OCAMLFLAGS=
 OCAMLLD=
-EXEC= out
-SRC= iostream.ml main.ml
+EXEC= a.out
+SRC= stdlib.ml iostream.ml main.ml
 OBJ= $(SRC:.ml=.cmx)
 MLI=
  
