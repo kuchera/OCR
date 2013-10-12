@@ -7,3 +7,5 @@ Shadow team
 	d-avra_a
 
 OCR : Optical Character Recognition
+
+Execute make clean before committing.
