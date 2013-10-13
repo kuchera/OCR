@@ -54,3 +54,10 @@ class file name =
 			with e-> 1
 	end
 
+let read_file filename =
+	let f = new file filename in
+	f#read_string
+
+let write_file str filename = 
+	let f = new file filename in
+	f#print_string str

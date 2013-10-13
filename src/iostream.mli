@@ -12,3 +12,5 @@ class file :
     method read_lines : string ref array
     method read_string : string
   end
+val read_file : string -> string
+val write_file : string -> string -> int

@@ -2,9 +2,9 @@ OCAML=ocamlopt
 OCAMLFLAGS=
 OCAMLLD=
 EXEC= a.out
-SRC= stdlib.ml iostream.ml main.ml
+SRC= stdlib.ml iostream.ml serialization.ml main.ml
 OBJ= $(SRC:.ml=.cmx)
-MLI= stdlib.mli iostream.mli
+MLI= stdlib.mli iostream.mli serialization.mli
  
 compile: modules
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${OBJ}

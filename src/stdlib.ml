@@ -1,5 +1,10 @@
 (* Modules Stdlib *)
 
+let string_of_char c = 
+	let s = ref "0" in
+	(!s).[0] <- c;
+	!s
+
 let string_list_to_array l = (* l : string ref list ref *)
 	let a = Array.make (List.length !l) (ref "") in
 	let f range value =
@@ -16,7 +21,7 @@ let split_string str separator =
 			l := sc::!l;
 			s := "")
 		else
-			(s := (!s)^(Char.escaped car)) in
+			(s := (!s)^(string_of_char car)) in
 	String.iter f str;
 	l := s::!l;
 	l := List.rev !l;
@@ -26,27 +31,30 @@ let remove_char_from s c =
 	let ret = ref "" in
 	String.iter (function car ->
 		if car <> c then 
-			ret := !ret^(Char.escaped car)) s;
+			ret := !ret^(string_of_char car)) s;
 	!ret
 
 let floatarray_to_string arr separator =
 	let ret = ref "" in
 	Array.iter (function e ->
-		ret := !ret ^ (if !ret = "" then "" else (Char.escaped separator)) ^ (string_of_float e)) arr;
+		ret := !ret ^ (if !ret = "" then "" else (string_of_char separator)) ^ (string_of_float e)) arr;
 	!ret
 
 let doublefloatarray_to_string arr sep1 sep2 = 
 	let ret = ref "" in
 	Array.iter (function a ->
-		ret := !ret ^ (if !ret = "" then "" else (Char.escaped sep1)) ^ (floatarray_to_string a sep2)) arr;
+		ret := !ret ^ (if !ret = "" then "" else (string_of_char sep1)) ^ (floatarray_to_string a sep2)) arr;
 	!ret
 
 let string_to_floatarray str separator =
 	let str = ref str in
+	str := remove_char_from !str '\n';
 	str := remove_char_from !str ' ';
 	let a = split_string !str separator in
 	let ret = Array.make (Array.length a) 0. in
-	Array.iteri (fun r v -> ret.(r) <- float_of_string !v) a;
+	Array.iteri (fun r v -> 
+		try ret.(r) <- float_of_string !v
+		with e -> ignore (failwith ("Cannot convert "^(!v)^" to float."))) a;
 	ret
 
 let string_to_doublefloatarray str sep1 sep2 =
