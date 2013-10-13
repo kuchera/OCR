@@ -4,7 +4,7 @@ OCAMLLD=
 EXEC= a.out
 SRC= stdlib.ml iostream.ml main.ml
 OBJ= $(SRC:.ml=.cmx)
-MLI=
+MLI= stdlib.mli iostream.mli
  
 compile: modules
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${OBJ}
