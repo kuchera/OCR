@@ -1,5 +1,9 @@
 (* Entry point of the program *)
 (* using : Iostream *)
 
+let print s = Printf.printf "%s\n" s
+
 let _ =
-	Printf.printf "Not implemented...\n"
+    begin
+        print "Not implemented..."
+    end
