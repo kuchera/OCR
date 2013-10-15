@@ -9,3 +9,11 @@ Shadow team
 OCR : Optical Character Recognition
 
 Execute make clean before committing.
+
+Git commands :
+
+    git pull
+    git status
+    git add    NOM_DU_FICHIER ou -u pour update tous les fichiers
+    git commit
+    git push origin master
