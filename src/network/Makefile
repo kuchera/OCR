@@ -3,7 +3,7 @@ OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= a.out
 SRC= neurone.ml network.ml
-OBJ= *.cmx $(SRC:.ml=.cmx)
+OBJ= $(SRC:.ml=.cmx)
 MLI= 
  
 compile: modules
