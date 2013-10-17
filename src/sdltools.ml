@@ -1,5 +1,7 @@
 (* Module Sdltools *)
 
+let set_window_name title icon = Sdlwm.set_caption title icon
+
 let get_img_dim img =
   ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
  

@@ -4,6 +4,7 @@ OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= a.out
 SRC=  neurone.ml network.ml
 OBJ= $(SRC:.ml=.cmx)
+USED=
 MLI= 
  
 compile: modules
