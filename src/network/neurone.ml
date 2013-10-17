@@ -2,10 +2,11 @@
 
 class neuron text nb_out =
     object (this)
-        val label = text
-        val value = 0.
+        val label:string = text
+        val mutable value = 0.
         val out = Array.make nb_out (0,0.)
         
+	method text = label
         method reset = value <- 0.
         method add v = value <- value +. v
         method add_weight e x =
