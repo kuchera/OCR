@@ -5,7 +5,7 @@ let string_of_char c =
 	(!s).[0] <- c;
 	!s
 
-let string_list_to_array l = (* l : string ref list ref *)
+let string_list_to_array l = 
 	let a = Array.make (List.length !l) (ref "") in
 	let f range value =
 		match !l with [] -> () | e::s ->
@@ -32,6 +32,21 @@ let remove_char_from s c =
 	String.iter (function car ->
 		if car <> c then 
 			ret := !ret^(string_of_char car)) s;
+	!ret
+
+let remove_string_from s c =
+	let s = ref s in
+	String.iter (function c -> s := remove_char_from !s c) c;
+	!s
+
+let rec  stringlist_to_string l separator = match l with
+	| e::s::l -> e ^ (string_of_char separator) ^ (stringlist_to_string (s::l) separator)
+	| e::_ -> e
+	| [] -> ""
+
+let stringarray_to_string arr separator =
+	let ret = ref "" in
+	Array.iter (function e -> ret := !ret ^ (if !ret = "" then "" else (string_of_char separator)) ^ e) arr;
 	!ret
 
 let floatarray_to_string arr separator =

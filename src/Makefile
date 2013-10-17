@@ -14,8 +14,20 @@ modules: ${SRC}
 
 exe: compile rmobj
 
+network:
+	cd ./network && make
+
+interface: 	
+	cd ./interface && make
+
+all: compile network interface
+
 rmobj:
 	rm -f *~ *.o *.cm?
 
 clean: rmobj
 	rm -f ${EXEC}
+
+mrproper: clean
+	cd network && make clean
+	cd interface && make clean

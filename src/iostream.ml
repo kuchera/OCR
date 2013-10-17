@@ -58,6 +58,6 @@ let read_file filename =
 	let f = new file filename in
 	f#read_string
 
-let write_file str filename = 
+let write_file filename str = 
 	let f = new file filename in
 	f#print_string str

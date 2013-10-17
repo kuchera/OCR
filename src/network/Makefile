@@ -2,18 +2,22 @@ OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= a.out
-SRC=  neurone.ml network.ml
+SRC=  neuron.ml network.ml
 OBJ= $(SRC:.ml=.cmx)
-USED=
-MLI= 
+USED= stdlib.cmx iostream.cmx serialization.cmx
+USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
+MLI= neuron.mli
  
 compile: modules
-	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${OBJ}
+	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${USED} ${OBJ}
 
-modules: ${SRC}
+modules: ${SRC} getobj
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -c ${MLI} ${SRC}
 
 exe: compile rmobj
+
+getobj:
+	cd .. && cp ${USED} ${USEDO} ./network/
 
 rmobj:
 	rm -f *~ *.o *.cm?

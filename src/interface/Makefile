@@ -16,9 +16,7 @@ modules: ${SRC} getobj
 exe: compile rmobj
 
 getobj:
-	cd .. && make
 	cp ../sdltools.cmx ../sdltools.o ../sdltools.cmi ./
-	cd .. && make clean
 
 rmobj:
 	rm -f *~ *.o *.cm?
