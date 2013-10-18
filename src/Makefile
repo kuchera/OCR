@@ -20,7 +20,13 @@ network:
 interface: 	
 	cd ./interface && make
 
-all: compile network interface
+filtres:
+	cd ./filtres && make
+
+rotation:
+	cd ./rotation && make
+
+all: compile network interface filtres rotation
 
 rmobj:
 	rm -f *~ *.o *.cm?
@@ -31,3 +37,5 @@ clean: rmobj
 mrproper: clean
 	cd network && make clean
 	cd interface && make clean
+	cd filtres && make clean
+	cd rotation && make clean
