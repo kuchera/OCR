@@ -27,3 +27,5 @@ let show_img img dst =
 let load_image name = Sdlloader.load_image name
 
 let init_display w h = Sdlvideo.set_video_mode w h [`DOUBLEBUF]
+
+let save filename img = Sdlvideo.save_BMP img filename
