@@ -45,5 +45,29 @@ let erase matrix img surface w h =
 		done
 	done
 
-let save img = Sdlvideo.save_BMP img "sans_bruit.bmp"
+
+let remove_noise input output = 
+        let img = Sdltools.load_image input in 
+        let matrix = img_to_matrix img in 
+        let (w,h) = Sdltools.get_img_dim img in
+        let surface = Sdlvideo.create_RGB_surface_format img [] w h in
+            erase matrix img surface w h;
+            Sdltools.save output surface
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
