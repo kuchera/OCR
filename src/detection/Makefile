@@ -1,10 +1,11 @@
 OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
-EXEC= display
-SRC= interface.ml
+EXEC= detection
+SRC= gethist.ml
 OBJ= $(SRC:.ml=.cmx)
-USED= sdltools.cmx
+USED= stdlib.cmx
+USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
 MLI= 
  
 compile: modules
@@ -16,7 +17,7 @@ modules: ${SRC} getobj
 exe: compile rmobj
 
 getobj:
-	cp ../sdltools.cmx ../sdltools.o ../sdltools.cmi ./
+	cd .. && cp ${USED} ${USEDO} ./detection/
 
 rmobj:
 	rm -f *~ *.o *.cm?
