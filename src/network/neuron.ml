@@ -23,6 +23,8 @@ class neuron text nb_out =
 		l := (string_of_float value) :: !l;
 		l := text :: !l;
 		Stdlib.stringlist_to_string (!l) sep2
+	method nb_out = Array.length out
+	method get_out i = out.(i)
     end
 
 let string_to_neuron s = 

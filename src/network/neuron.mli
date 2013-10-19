@@ -9,6 +9,8 @@ class neuron :
     val mutable value : float
     method add : float -> unit
     method add_weight : int -> float -> unit
+    method get_out : int -> float
+    method nb_out : int
     method reset : unit
     method reset_weight : int -> unit
     method text : string
