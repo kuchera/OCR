@@ -161,7 +161,7 @@ let _ =
 	let l = detectText ~mustDraw:false Sys.argv.(1) in
 		let rec writeFile liste = match liste with  
 			| [] -> exit 0
-			| a::liste -> Iostream.write_file (Sys.argv(2)) (a^"|");
+			| a::liste -> ignore (Iostream.write_file (Sys.argv.(2)) (a^"|"));
 			writeFile liste
 		in writeFile l
 
