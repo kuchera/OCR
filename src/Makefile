@@ -12,26 +12,27 @@ compile: modules
 modules: ${SRC}
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -c ${MLI} ${SRC}
 
-exe: compile rmobj
+exe:: compile rmobj
 
-network:
+all:: compile
 	cd ./network && make
-
-interface: 	
 	cd ./interface && make
-
-filtres:
 	cd ./filtres && make
-
-rotation:
 	cd ./rotation && make
+	cd ./detection && make
 
-all: compile network interface filtres rotation
+allexe: all
+	cd network && make rmobj
+	cd interface && make rmobj
+	cd filtres && make rmobj
+	cd rotation && make rmobj
+	cd detection && make rmobj
+	make rmobj
 
 rmobj:
 	rm -f *~ *.o *.cm?
 
-clean: rmobj
+clean:: rmobj
 	rm -f ${EXEC}
 
 mrproper: clean
@@ -39,3 +40,4 @@ mrproper: clean
 	cd interface && make clean
 	cd filtres && make clean
 	cd rotation && make clean
+	cd detection && make clean

@@ -15,5 +15,6 @@ Git commands :
     git pull
     git status
     git add    NOM_DU_FICHIER ou -u pour update tous les fichiers
+    git reset (--hard) HEAD file...
     git commit
     git push origin master

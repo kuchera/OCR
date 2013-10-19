@@ -19,8 +19,17 @@ exe: compile rmobj
 getobj:
 	cd .. && cp ${USED} ${USEDO} ./network/
 
+main:
+	cd .. && make
+
+all:
+	cd .. && make all
+
 rmobj:
 	rm -f *~ *.o *.cm?
 
 clean: rmobj
 	rm -f ${EXEC}
+
+mrproper:
+	cd .. && make mrproper
