@@ -1,8 +1,9 @@
 (* Entry point of the program *)
 (* using : Iostream *)
 
-let print s = Printf.printf "%s\n" s
+let print s = Printf.printf "/%s/\n" s
 
 let _ =
-	let s = "42;4;2;42" in
-	print (Stdlib.string_of_int4 (Stdlib.int4_of_string s ";") "|")
+Array.iter print (Stdlib.split_string2 "llallbllllcllll" "ll");
+print "========";
+Array.iter print (Stdlib.split_string2 "allbllllc" "ll")

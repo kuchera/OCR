@@ -29,20 +29,38 @@ let split_string str separator =
 	l := s::!l;
 	l := List.rev !l;
 	string_list_to_array l
-(*
-let split_string2 s sep =
-	let l = ref [] 
-	and tmp = ref "" 
-	and parc = ref ""
-	and i = ref 0
-	and j = ref 0 in
-	while !i < String.length s do
-		while !j < String.length sep && s.[!i + !j] = sep.[!j] do
-			parc := !parc ^ (string_of_char (s.[!i + !j]));
-			j := !j + 1
-		done
-		if 1j > 0 do
-*)
+
+let string_search s f =
+	let l = String.length s and
+	lf = String.length f and
+	ret = ref (-1) and
+	i = ref 0 in
+	while !i < l do
+		if s.[!i] = f.[0] && !i < l - lf && String.sub s !i lf = f then
+			(ret := !i;
+			i := l)
+		else
+			i := !i + 1	
+	done;
+	!ret
+
+let split_string2 str sep =
+	let s = ref str and
+	l = ref [] in
+	while !s <> "" do
+		let p = string_search !s sep in
+		if p >= 0 then
+			(l := (ref (String.sub !s 0 p)) :: !l;
+			s := String.sub !s (p + String.length sep) (String.length !s - p - String.length sep);
+			if !s = "" then
+				l := (ref "") :: !l)
+		else
+			(l := s :: !l;
+			s := "")
+	done;
+	l := List.rev !l;
+	let a = string_list_to_array l in
+	array_from_refarray a
 
 let string_of_int4 (a,b,c,d) sep =
 	(string_of_int a)^sep^(string_of_int b)^sep^(string_of_int c)^sep^(string_of_int d)
