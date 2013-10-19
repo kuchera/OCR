@@ -13,6 +13,9 @@ let string_list_to_array l =
 		l := s
 	in Array.iteri f a; a
 
+let array_from_refarray a =
+	Array.init (Array.length a) (fun i -> !(a.(i)))
+
 let split_string str separator = 
 	let l = ref [] and s = ref "" in
 	let f = function car ->
@@ -26,6 +29,31 @@ let split_string str separator =
 	l := s::!l;
 	l := List.rev !l;
 	string_list_to_array l
+(*
+let split_string2 s sep =
+	let l = ref [] 
+	and tmp = ref "" 
+	and parc = ref ""
+	and i = ref 0
+	and j = ref 0 in
+	while !i < String.length s do
+		while !j < String.length sep && s.[!i + !j] = sep.[!j] do
+			parc := !parc ^ (string_of_char (s.[!i + !j]));
+			j := !j + 1
+		done
+		if 1j > 0 do
+*)
+
+let string_of_int4 (a,b,c,d) sep =
+	(string_of_int a)^sep^(string_of_int b)^sep^(string_of_int c)^sep^(string_of_int d)
+
+let int4_of_string s sep = 
+	let a = split_string s (sep.[0]) in
+	if Array.length a <> 4 then (0,0,0,0) else
+	(int_of_string !(a.(0)),int_of_string !(a.(1)),int_of_string !(a.(2)),int_of_string !(a.(3)))
+
+
+
 
 let remove_char_from s c =
 	let ret = ref "" in

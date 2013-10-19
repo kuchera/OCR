@@ -4,5 +4,5 @@
 let print s = Printf.printf "%s\n" s
 
 let _ =
-    begin
-    end
+	let s = "42;4;2;42" in
+	print (Stdlib.string_of_int4 (Stdlib.int4_of_string s ";") "|")

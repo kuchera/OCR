@@ -29,7 +29,6 @@ class neuron text nb_out =
 
 let string_to_neuron s = 
 	try
-	let s = Stdlib.remove_string_from s "<>{}/" in
 	let a = Stdlib.split_string s sep2 in
 	let l = Stdlib.string_to_floatarray !(a.(2)) sep1 in
 	let n = new neuron !(a.(0)) (Array.length l) in

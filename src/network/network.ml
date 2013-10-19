@@ -3,4 +3,5 @@
 let print s = Printf.printf "%s\n" s
 
 let _ = 
-    print "En developpement..."
+	let l = new Layer.layer 3 5 in
+	print (l#to_string)

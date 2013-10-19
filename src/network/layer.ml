@@ -16,7 +16,7 @@ class layer nb_neur nb_out =
 		Array.iter (fun n -> n#reset) neurones
 	method to_string =
 		let s = ref "" in
-		Array.iter (fun n -> s := (if !s = "" then "" else Stdlib.string_of_char separator) ^ (n#to_string)) neurones;
+		Array.iter (fun n -> s := !s ^ (if !s = "" then "" else Stdlib.string_of_char separator) ^ (n#to_string)) neurones;
 		!s
 	method nb_neur = Array.length neurones
     end
