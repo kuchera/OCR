@@ -4,7 +4,7 @@ OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= detection
 SRC= detect.ml
 OBJ= $(SRC:.ml=.cmx)
-USED= stdlib.cmx sdltools.cmx
+USED= stdlib.cmx sdltools.cmx iostream.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
 MLI= 
  
