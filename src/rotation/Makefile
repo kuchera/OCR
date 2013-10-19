@@ -1,12 +1,12 @@
 OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
-EXEC= a.out
+EXEC=  rotation
 SRC=  rotation.ml
 OBJ= $(SRC:.ml=.cmx)
 USED= sdltools.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
-MLI= neuron.mli
+MLI= rotation.mli
  
 compile: modules
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${USED} ${OBJ}
