@@ -1,4 +1,5 @@
 (* *** BASIC FUNCTIONS *** *)
+(*
 let get_dims img =
         ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
 
@@ -18,6 +19,8 @@ let show img dst =
   let d = Sdlvideo.display_format img in
     Sdlvideo.blit_surface d dst ();
     Sdlvideo.flip dst
+*)
+
 
 let reverse list1 =   
 	let rec reverser rl = function 
@@ -25,25 +28,12 @@ let reverse list1 =
 		| _ -> rl
 	in reverser [] list1
 
-(* let copyImg img =
-        let (w, h) = get_dims img in
-	let img2 = (Sdlvideo.create_RGB_surface_format img [] w h) in
-        for i = 0 to w-1 do
-                for j = 0 to h-1 do
-                         let c = Sdlvideo.get_pixel_color img i j in
-                                Sdlvideo.put_pixel_color img2 i j c
-                done
-        done;
-	img2 *)
-
-
-(* *** UTILITY FUNCTIONS *** *)
 let is_black (r, g, b) = match (r, g, b) with
 	|( 0, 0, 0) -> true
 	|_ -> false
 
 let getYHist img =
-	let (w, h) = get_dims img in
+	let (w, h) = Sdltools.get_img_dim img in
 	let histogramme = Array.init h (fun _ -> 0) in
 	for j = 0 to h-1 do
 		for i = 0 to w-1 do 
@@ -55,7 +45,7 @@ let getYHist img =
 	histogramme
 
 let getXHist img (bs, bi) =
-        let (w, h) = get_dims img in
+        let (w, h) = Sdltools.get_img_dim img in
         let histogramme = Array.init w (fun _ -> 0) in
         for i = 0 to w-1 do
                 for j = bs to bi do 
@@ -66,8 +56,8 @@ let getXHist img (bs, bi) =
         done;
         histogramme
 
-let getLines ?(prst=0) ?(misc = false) img new_img = 
-	let (w, h) = get_dims img in 
+let getLines ?(prst=0) ?(misc = false) img = 
+	let (w, h) = Sdltools.get_img_dim img in 
 	let hist = getYHist img in
 	let inLine = ref false in
 	let str = ref 0 in
@@ -94,20 +84,10 @@ let getLines ?(prst=0) ?(misc = false) img new_img =
 		|(bs, bi)::l -> epur l ((bs, bi)::l2)
 		|[] -> l2
 	in l := epur !l [];
-	(*On dessine les lignes sur l'image *) 	
-	let rec drawLines liste = match liste with
-		|(bs, bi)::l -> 
-		for i = 0 to w - 1 do
-			Sdlvideo.put_pixel_color new_img i bs (0, 0, 0);
-			Sdlvideo.put_pixel_color new_img i bi (0, 0, 0);
-		done;
-		drawLines l;
-		|_ -> ()
-	in drawLines !l;
 	reverse !l (* on veut les lignes du haut vers le bas et pas l'inverse *)
 
-let getChars ?(prst=0) img new_img linesList =
-	let (w, h) = get_dims img in
+let getChars ?(prst=0) img linesList =
+	let (w, h) = Sdltools.get_img_dim img in
 	let inColumn = ref false in
 	let str = ref 0 in
 	let rectList = ref [] in
@@ -133,7 +113,23 @@ let getChars ?(prst=0) img new_img linesList =
                 |((bs, i1),(bi, i2))::l -> epur l (((bs, i1),(bi, i2))::l2)
                 |_ -> l2
         in rectList := epur !rectList [];
+	(reverse !rectList)
 
+(* DRAW FUNCTIONS *)
+let drawLines new_img linesList =
+	let (w, h) = Sdltools.get_img_dim new_img in 
+        let rec drawLines liste = match liste with
+                |(bs, bi)::l ->
+                for i = 0 to w - 1 do
+                        Sdlvideo.put_pixel_color new_img i bs (0, 0, 0);
+                        Sdlvideo.put_pixel_color new_img i bi (0, 0, 0);
+                done;
+                drawLines l;
+                |_ -> ()
+        in drawLines linesList
+
+
+let drawChars new_img charsList = 
 	let rec drawColumns liste = match liste with
 		|((bs, x1),(bi, x2))::l ->
                  for j = bs to bi do
@@ -142,14 +138,11 @@ let getChars ?(prst=0) img new_img linesList =
                  done;
 		 drawColumns l;
 		|_ -> ()
-	in drawColumns !rectList;
-	reverse !rectList (* on veut les characteres de gauche à droite *)
- 
+	in drawColumns charsList
 			
 
-(* *** TESTS FUNCTIONS *** *)
 let drawHist img new_img =
-	let (w, h) = get_dims img in 
+	let (w, h) = Sdltools.get_img_dim img in 
 	let hist1 = getYHist img in
 	let hist2 = getXHist img (0, h-1) in
 	for j = 0 to h-1 do
@@ -163,25 +156,23 @@ let drawHist img new_img =
                 done
         done
 
-
-let main () =
+let detectText ?(mustDraw=false) imgPath =
+        Sdltools.sdl_init ();
+        let img = Sdlloader.load_image imgPath in
+	let linesList = getLines ~prst:3 ~misc:true img in
+	let charsList = getChars ~prst:1 img linesList in
+	if( mustDraw = true ) then
 	begin
-		if Array.length (Sys.argv) < 2 then
-			failwith "Trop peu d'arguments";
-		sdl_init ();
-		let img = Sdlloader.load_image Sys.argv.(1) in
-		let (w, h) = get_dims img in
-		let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
-		show img display;
-		wait_key();
-		let new_img = Sdlloader.load_image Sys.argv.(1) in
-		(* let new_img = copyImg img in *)
+        	let (w, h) = Sdltools.get_img_dim img in
+               	let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+		let new_img = Sdlloader.load_image imgPath in
 		drawHist img new_img;
-		let l = getLines ~prst:3 ~misc:false img new_img in
-		getChars ~prst:1 img new_img l;
-		show new_img display;
-		wait_key();
-		exit 0
-	end
+		drawChars new_img charsList;
+		drawLines new_img linesList;
+		Sdltools.show_img new_img display;
+		Sdltools.wait_key();
+	end;
+	exit 0
 
-let _ = main ()	
+let _ = detectText ~mustDraw:true Sys.argv.(1)
+
