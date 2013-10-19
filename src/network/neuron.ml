@@ -2,7 +2,6 @@
 
 let sep1 = ':'
 let sep2 = ';'
-let sep3 = '/'
 
 class neuron text nb_out =
     object (this)

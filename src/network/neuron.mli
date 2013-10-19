@@ -1,6 +1,5 @@
 val sep1 : char
 val sep2 : char
-val sep3 : char
 class neuron :
   string ->
   int ->
