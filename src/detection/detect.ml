@@ -1,27 +1,3 @@
-(* *** BASIC FUNCTIONS *** *)
-(*
-let get_dims img =
-        ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
-
-let sdl_init () =
-  begin
-    Sdl.init [`EVERYTHING];
-    Sdlevent.enable_events Sdlevent.all_events_mask;
-  end
-
-let rec wait_key () =
-  let e = Sdlevent.wait_event () in
-    match e with
-    Sdlevent.KEYDOWN _ -> ()
-      | _ -> wait_key ()
-
-let show img dst =
-  let d = Sdlvideo.display_format img in
-    Sdlvideo.blit_surface d dst ();
-    Sdlvideo.flip dst
-*)
-
-
 let reverse list1 =   
 	let rec reverser rl = function 
 		| a::l1 -> reverser (a::rl) l1
@@ -172,7 +148,20 @@ let detectText ?(mustDraw=false) imgPath =
 		Sdltools.show_img new_img display;
 		Sdltools.wait_key();
 	end;
-	exit 0
+	let rec convertList liste1 liste2 = match liste1 with
+	|((bs, x1),(bi, x2))::l -> let str = (string_of_int bs)^" "^(string_of_int x1)^" "^(string_of_int (bi -bs))^" "^(string_of_int (x2 -x1)) in
+	  convertList l (str::liste2)
+	|[] -> liste2
+	in convertList charsList []
 
-let _ = detectText ~mustDraw:true Sys.argv.(1)
+
+let _ = 
+	if Array.length (Sys.argv) < 3 then
+                failwith "(Param. 1 : Path to Picture | Param. 2 : Path to Text file";
+	let l = detectText ~mustDraw:false Sys.argv.(1) in
+		let rec writeFile liste = match liste with  
+			| [] -> exit 0
+			| a::liste -> Iostream.write_file (Sys.argv(2)) (a^"|");
+			writeFile liste
+		in writeFile l
 
