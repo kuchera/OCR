@@ -4,7 +4,7 @@ class neuron :
   string ->
   int ->
   object
-    val label : string
+    val mutable label : string
     val out : float array
     val mutable value : float
     method add : float -> unit
@@ -13,6 +13,7 @@ class neuron :
     method nb_out : int
     method reset : unit
     method reset_weight : int -> unit
+    method set_text : string -> unit
     method text : string
     method to_string : string
     method valueof : int -> float

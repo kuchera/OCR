@@ -5,11 +5,12 @@ let sep2 = ';'
 
 class neuron text nb_out =
     object (this)
-        val label:string = text
+        val mutable label:string = text
         val mutable value = 0.
         val out = Array.make nb_out (0.)
         
 	method text = label
+	method set_text s = label <- s
         method reset = value <- 0.
         method add v = value <- value +. v
         method add_weight e x =
