@@ -1,0 +1,11 @@
+================= HELP =================
+=   noise  - Removes the noise         =
+=   bin    - Binarises the image       =
+=   rot    - Rotates the image         =
+=   det    - Detects text zones        =
+=   in     - Changes the input file    =
+=   out    - Changes the output file   =
+=   dis    - Displays the output file  =
+=                                      =
+=   exit   - Exits the program         =
+========================================
