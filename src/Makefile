@@ -29,11 +29,31 @@ allexe: all
 	cd detection && make rmobj
 	make rmobj
 
+out: allexe
+	rm -rf out/
+	mkdir out
+	cp ${EXEC} out/
+	cp interface/interface out/
+	cp filtres/filtres out/
+	cp rotation/rotation out/
+	cp detection/detection out/
+	cp network/network out/
+	make rmexe
+
 rmobj:
 	rm -f *~ *.o *.cm?
 
+rmexe:
+	rm -f ${EXEC} 
+	rm -f interface/interface
+	rm -f filtres/filtres
+	rm -f rotation/rotation
+	rm -f detection/detection
+	rm -f network/network 
+
 clean:: rmobj
 	rm -f ${EXEC}
+	rm -rf out/
 
 mrproper: clean
 	cd network && make clean
