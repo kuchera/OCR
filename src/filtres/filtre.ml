@@ -4,9 +4,9 @@ let print_help () =
 let _ = 
 	if Array.length (Sys.argv) >= 4 then
 		if Sys.argv.(1) = "noise" then
-			Bruit.remove_noise (Sys.argv.(1)) (Sys.argv.(2))
+			Bruit.remove_noise (Sys.argv.(2)) (Sys.argv.(3))
 		else if Sys.argv.(1) = "binarize" then
-			Binarisation.binarize (Sys.argv.(1)) (Sys.argv.(2))
+			Binarisation.binarize (Sys.argv.(2)) (Sys.argv.(3))
 		else
 			print_help ()
 	else if Array.length (Sys.argv) >= 3 then

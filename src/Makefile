@@ -1,7 +1,7 @@
 OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
-EXEC= a.out
+EXEC= run
 SRC= sdltools.ml stdlib.ml iostream.ml main.ml
 OBJ= $(SRC:.ml=.cmx)
 MLI= sdltools.mli stdlib.mli iostream.mli
