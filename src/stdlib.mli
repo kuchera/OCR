@@ -1,5 +1,6 @@
 val string_of_char : char -> string
 val string_list_to_array : string ref list ref -> string ref array
+val array_of_list : 'a list -> 'a array
 val array_from_refarray : 'a ref array -> 'a array
 val split_string : string -> char -> string ref array
 val string_search : string -> string -> int

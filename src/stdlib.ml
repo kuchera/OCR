@@ -13,6 +13,12 @@ let string_list_to_array l =
 		l := s
 	in Array.iteri f a; a
 
+let array_of_list l =
+	let l = ref l in
+	Array.init (List.length !l) (fun _ -> match !l with
+		| e::s -> l := s ; e
+		| _ -> failwith "Error in : Stdlib.array_of_list")
+
 let array_from_refarray a =
 	Array.init (Array.length a) (fun i -> !(a.(i)))
 

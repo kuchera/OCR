@@ -148,20 +148,19 @@ let detectText ?(mustDraw=false) imgPath =
 		Sdltools.show_img new_img display;
 		Sdltools.wait_key();
 	end;
-	let rec convertList liste1 liste2 = match liste1 with
-	|((bs, x1),(bi, x2))::l -> let str = (string_of_int bs)^" "^(string_of_int x1)^" "^(string_of_int (bi -bs))^" "^(string_of_int (x2 -x1)) in
-	  convertList l (str::liste2)
-	|[] -> liste2
-	in convertList charsList []
+	charsList
 
+let draw image =
+	ignore (detectText ~mustDraw:true image)
 
-let _ = 
-	if Array.length (Sys.argv) < 3 then
-                failwith "(Param. 1 : Path to Picture | Param. 2 : Path to Text file";
-	let l = detectText ~mustDraw:false Sys.argv.(1) in
-		let rec writeFile liste = match liste with  
-			| [] -> exit 0
-			| a::liste -> ignore (Iostream.write_file (Sys.argv.(2)) (a^"|"));
-			writeFile liste
-		in writeFile l
+let get_int4_array image =
+	let l = ref (detectText image) in
+	Array.init (List.length !l) (function _ -> 
+		match !l with
+			| ((x,y),(w,h))::f -> l := f ; (x,y,w,h)
+			| _ -> failwith "Error in : Detect.detect")
 
+let detect image outfile =
+	let a = get_int4_array image in
+	let sa = Array.init (Array.length a) (function i -> Stdlib.string_of_int4 (a.(i)) ";") in
+	Iostream.write_file outfile (Stdlib.stringarray_to_string sa '|')
