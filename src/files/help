@@ -1,6 +1,7 @@
 ================= HELP =================
 =   noise  - Removes the noise         =
 =   bin    - Binarises the image       =
+=   fil    - Applies filtres           =
 =   rot    - Rotates the image         =
 =   det    - Detects text zones        =
 =   in     - Changes the input file    =

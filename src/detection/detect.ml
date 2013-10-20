@@ -154,7 +154,7 @@ let get_int4_array ?(draw=false) image =
 	let l = ref (detectText ~mustDraw:draw image) in
 	Array.init (List.length !l) (function _ -> 
 		match !l with
-			| ((x,y),(w,h))::f -> l := f ; (x,y,w,h)
+			| ((x,y),(w,h))::f -> l := f ; (x,y,w-x,h-y)
 			| _ -> failwith "Error in : Detect.detect")
 
 let detect ?(draw=false) image outfile =

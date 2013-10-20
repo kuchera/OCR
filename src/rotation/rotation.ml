@@ -113,20 +113,21 @@ let apply_hough_dich img  =
               dicho (debut+.(fin-.debut)/.2.) fin (n-1)
             else dicho (debut+.(fin-.debut)/.2.) fin (n-1)
       end
-  in dicho (-15.) (15.) 15;;
+  in dicho (-15.) (15.) 15
 
 
 let final img = 
   let angle = apply_hough_dich img in
   best_r img angle;
-  apply_rot img angle;;
+  Printf.printf "Rotation angle : %f\n" angle;
+  apply_rot img angle
 
 let rotation input output = 
     let img = Sdltools.load_image input in 
     Sdltools.save output (final img)
 
 let _ =
-    if Array.length (Sys.argv) >= 3 then
+    if Array.length (Sys.argv) == 3 then
         rotation (Sys.argv.(1)) (Sys.argv.(2))
     else
         Printf.printf "%s inputfile outputfile - Reads inputfile, applies the
