@@ -39,7 +39,7 @@ out: allexe
 	cp detection/detection out/
 	cp network/network out/
 	make rmexe
-	cp -r files/ out/
+	cp -r files/ out/files/
 
 rmobj:
 	rm -f *~ *.o *.cm?
