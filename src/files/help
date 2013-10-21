@@ -1,6 +1,8 @@
 ================= HELP =================
 =   noise  - Removes the noise         =
 =   bin    - Binarises the image       =
+=   nib    - Binarises the image using =
+=            the Niblack algorithm     =
 =   fil    - Applies filtres           =
 =   rot    - Rotates the image         =
 =   det    - Detects text zones        =

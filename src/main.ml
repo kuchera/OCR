@@ -45,6 +45,13 @@ let exec_bin inf outf =
 	if return = 0 then
 		Printf.printf "Image saved in \"%s\".\n" outf
 
+let exec_nib inf outf =
+	Printf.printf "Binarising \"%s\"...\n" inf;
+	let return = Sys.command ("./filtres niblack "^inf^" "^outf) in
+	Printf.printf "Returned code : %d\n" return;
+	if return = 0 then
+		Printf.printf "Image saved in \"%s\".\n" outf
+
 let exec_rot inf outf =
 	Printf.printf "Rotating \"%s\"...\n" inf;
 	let return = Sys.command ("./rotation "^inf^" "^outf) in
@@ -73,6 +80,7 @@ try
 		match !s with
 		| "noise" -> exec_noise !inf !outf
 		| "bin"   -> exec_bin !inf !outf
+                | "nib"   -> exec_nib !inf !outf
 		| "fil"   -> exec_fil !inf !outf
 		| "rot"   -> exec_rot !inf !outf
 		| "det"   -> exec_det !inf (get_entry ())

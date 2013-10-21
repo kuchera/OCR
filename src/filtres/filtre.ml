@@ -7,6 +7,8 @@ let _ =
 			Bruit.remove_noise (Sys.argv.(2)) (Sys.argv.(3))
 		else if Sys.argv.(1) = "binarize" then
 			Binarisation.binarize (Sys.argv.(2)) (Sys.argv.(3))
+                else if Sys.argv.(1) = "niblack" then
+                        Niblack.binarize (Sys.argv.(2)) (Sys.argv.(3))
 		else
 			print_help ()
 	else if Array.length (Sys.argv) >= 3 then
