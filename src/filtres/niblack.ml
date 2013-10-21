@@ -1,4 +1,4 @@
-let level (r,g,b) = ( 0.3*.(float_of_int r)+.0.59*.(float_of_intg)+.0.11*.(float_of_int b))
+let level (r,g,b) = ( 0.3*.(float_of_int r)+.0.59*.(float_of_int g)+.0.11*.(float_of_int b))
 
 let color2grey (r,g,b) = let aux = int_of_float(level (r,g,b)) in
                          (aux,aux,aux)
@@ -73,4 +73,4 @@ let binary img =
 
 let binarize input output = 
         let im = Sdltools.load_image input in
-        Sdltools.save output (binary img)
+        Sdltools.save output (binary im)
