@@ -1,4 +1,7 @@
 ================= HELP =================
+=                                      =
+=   rec    - Applies the functions     =
+=                                      =
 =   noise  - Removes the noise         =
 =   bin    - Binarises the image       =
 =   nib    - Binarises the image using =
@@ -6,9 +9,10 @@
 =   fil    - Applies filtres           =
 =   rot    - Rotates the image         =
 =   det    - Detects text zones        =
+=   dis    - Displays the output file  =
+=                                      =
 =   in     - Changes the input file    =
 =   out    - Changes the output file   =
-=   dis    - Displays the output file  =
 =                                      =
 =   exit   - Exits the program         =
 ========================================
