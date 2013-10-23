@@ -126,9 +126,13 @@ let rotation input output =
     let img = Sdltools.load_image input in 
     Sdltools.save output (final img)
 
+let rotsec input output angle =
+    let img = Sdltools.load_image input in
+    Sdltools.save output (apply_rot img angle)
+
 let _ =
     if Array.length (Sys.argv) == 3 then
-        rotation (Sys.argv.(1)) (Sys.argv.(2))
+        rotation (Sys.argv.(1)) (Sys.argv.(2)) 
     else
         Printf.printf "%s inputfile outputfile - Reads inputfile, applies the
         rotation and saves in the outputfile.\n" (Sys.argv.(0))
