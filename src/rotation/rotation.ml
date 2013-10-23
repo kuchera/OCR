@@ -131,8 +131,13 @@ let rotsec input output angle =
     Sdltools.save output (apply_rot img angle)
 
 let _ =
-    if Array.length (Sys.argv) == 3 then
+    if Array.length (Sys.argv) = 3 then
         rotation (Sys.argv.(1)) (Sys.argv.(2)) 
+    else if Array.length (Sys.argv) = 4 then
+        try
+                rotsec (Sys.argv.(1)) (Sys.argv.(2)) (float_of_string
+                (Sys.argv.(3)))
+        with e -> Printf.printf "An error occured.\n"
     else
         Printf.printf "%s inputfile outputfile - Reads inputfile, applies the
         rotation and saves in the outputfile.\n" (Sys.argv.(0))
