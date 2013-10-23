@@ -38,7 +38,9 @@ let exec_rot inf outf flags =
 	if return = 0 then
 		Printf.printf "Image saved in \"%s\".\n" outf
 
-let exec_det inf outf flags =
+let exec_det inf flags =
+        Printf.printf "Enter the text zones detection output file name : ";
+        let outf = get_entry () in
 	Printf.printf "Detecting text zones \"%s\"...\n" inf;
 	let return = Sys.command ("./detection "^flags^" "^inf^" "^outf) in
 	Printf.printf "Returned code : %d\n" return;
@@ -49,8 +51,11 @@ let _ =
 try
 	print_file "files/header";
 
-	let inf = ref (getinfile ())
-	and outf = ref (getoutfile ()) in
+	let inf = ref ""
+	and outf = ref "" in
+
+        inf := getinfile ();
+        outf := getoutfile ();
 
 	let s = ref "" in
 	while !s <> "exit" do
@@ -58,15 +63,15 @@ try
 		s := read_line ();
 		match !s with
 		| "noise" -> exec_fil !inf !outf "noise"
-		| "bin"   -> exec_fil !inf !outf "binarise"
+		| "bin"   -> exec_fil !inf !outf "binarize"
                 | "nib"   -> exec_fil !inf !outf "niblack"
 		| "fil"   -> exec_fil !inf !outf ""
 		| "rot"   -> exec_rot !inf !outf ""
-		| "det"   -> exec_det !inf (get_entry ()) "draw"
+		| "det"   -> exec_det !inf  "draw"
 		| "dis"   -> display !outf
                 | "rec"   ->    exec_fil !inf !outf "";
                                 exec_rot !inf !outf "";
-                                exec_det !inf (get_entry ()) "";
+                                exec_det !inf "";
                                 display !outf
                 | "c"     -> ignore (Sys.command (get_entry ()))
 		| "help"  -> print_file "files/help"
