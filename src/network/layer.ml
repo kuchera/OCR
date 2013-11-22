@@ -1,31 +1,25 @@
-(* Module Layer *)
+class layer nb_neuron nb_in =
+object (this)
+	val mutable _neurons = Array.init nb_neuron (fun _ -> new Neuron.neuron nb_in)
 
-let separator = '|'
-
-class layer nb_neur nb_out =
-    object (this)
-        val neurones = Array.init nb_neur (fun i -> (new Neuron.neuron (string_of_int i) nb_out))
-
-	method get_neuron i = neurones.(i)
-	method set_neuron i n = neurones.(i) <- n
-	method get_out_to i =
-		let r = ref 0. in
-		Array.iter (fun n -> r := !r +. (n#get_out i)) neurones;
-		!r
-	method reset =
-		Array.iter (fun n -> n#reset) neurones
-	method to_string =
-		let s = ref "" in
-		Array.iter (fun n -> s := !s ^ (if !s = "" then "" else Stdlib.string_of_char separator) ^ (n#to_string)) neurones;
-		!s
-	method nb_neur = Array.length neurones
-    end
-
-let string_to_layer s =
-	let ars = Stdlib.split_string s separator in
-	let neur = Array.init (Array.length ars) (fun i -> Neuron.string_to_neuron (!(ars.(i)))) in
-	let lay = new layer (Array.length neur) ((neur.(0))#nb_out) in
-	for i = 0 to lay#nb_neur do
-		lay#set_neuron i (neur.(i))
-	done;
-	lay
+	method get i = _neurons.(i)
+	method set i n = _neurons.(i) <- n
+	method get_out = Array.init nb_neuron (fun i -> (_neurons.(i))#out)
+	method set_allin ain = 
+		for i=0 to nb_neuron - 1 do
+			this#set_in i ain
+		done
+	method set_in i ain = _neurons.(i)#set_input ain
+	method sum_adj n =
+		let out = ref 0. in
+		for i=0 to nb_neuron - 1 do
+			out := !out +. _neurons.(i)#weight n *. _neurons.(i)#error
+		done;
+		!out
+	method serror i e = _neurons.(i)#serror e
+	method adjust_weight rate =
+		for i=0 to nb_neuron - 1 do
+			_neurons.(i)#adjust_weight rate
+		done
+	method length = nb_neuron
+end

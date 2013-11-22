@@ -1,31 +1,36 @@
-(* Module Graph *)
+(* [|42;42;42|] est un array *)
 
-let separator = '/'
-
-class graph param = (* graph : liste du nombre de neurones par couche en commencant pas la couche la plus basse *)
+class graph nb_in learn_rate nperl =
 object (this)
-	val layers =
-		let l = Array.length param in
-		Array.init l (fun i ->
-			new Layer.layer (param.(i)) (if i >= l-1 then 1 else param.(i+1)))
-	
-	method get_layers = layers
-	method get_layer i = layers.(i)
-	method set_layer i l = layers.(i) <- l
-	method get_neuron l n = (layers.(l))#get_neuron n
-	method reset = Array.iter (function e -> e#reset) layers
-	method to_string = 
-		let s = ref "" in
-		Array.iter (function l -> s := !s ^ (if !s = "" then "" else Stdlib.string_of_char separator) ^ (l#to_string)) layers;
-		!s
-end
+	val mutable _layers = Array.init (Array.length nperl - 1) (fun i -> new Layer.layer nperl.(i) (if i=0 then nb_in else nperl.(i-1)))
+	val mutable _output = new Layer.layer nperl.(Array.length nperl - 1) nperl.(Array.length nperl - 2)
 
-let string_to_graph s =
-	let ar = Stdlib.split_string s separator in
-	let ar = Array.init (Array.length ar) (function i -> 
-		Layer.string_to_layer !(ar.(i))) in
-	let param = Array.init (Array.length ar) (function i -> 
-		(ar.(i))#nb_neur) in
-	let g = new graph param in
-	Array.iteri (fun i e -> g#set_layer i e) ar;
-	g
+	method training ain aout = (* entrees resultatsAttendus *)
+		let out = this#get_out ain in
+		for i=0 to _output#length - 1 do
+			_output#serror i (out.(i) *. (1. -. out.(i)) *. (aout.(i) -. out.(i)))
+		done;
+		let out = _layers.(Array.length _layers - 1)#get_out in
+		for i=0 to _layers.(Array.length _layers - 1)#length - 1 do
+			_layers.(Array.length _layers - 1)#serror i (out.(i) *. (1. -. out.(i)) *. (_output#sum_adj i))
+		done;
+		let i = ref (Array.length _layers - 2) in
+		while !i >= 0 do
+			let out = _layers.(!i)#get_out in
+			for j=0 to _layers.(!i)#length - 1 do
+				_layers.(!i)#serror j (out.(j) *. (1. -. out.(j)) *. (_layers.(!i + 1)#sum_adj j))
+			done;
+			i := !i - 1
+		done;
+		_output#adjust_weight learn_rate;
+		for i=0 to Array.length _layers - 1 do
+			_layers.(i)#adjust_weight learn_rate
+		done
+	method get_out ain = 
+		_layers.(0)#set_allin ain;
+		for i=1 to Array.length _layers - 1 do
+			_layers.(i)#set_allin _layers.(i-1)#get_out
+		done;
+		_output#set_allin _layers.(Array.length _layers - 1)#get_out;
+		_output#get_out
+end
