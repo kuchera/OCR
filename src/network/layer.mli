@@ -1,3 +1,4 @@
+val separator : char
 class layer :
   int ->
   int ->
@@ -11,5 +12,8 @@ class layer :
     method set : int -> Neuron.neuron -> unit
     method set_allin : float array -> unit
     method set_in : int -> float array -> unit
+    method set_neuron : int -> Neuron.neuron -> unit
     method sum_adj : int -> float
+    method to_string : string
   end
+val parse : string -> layer

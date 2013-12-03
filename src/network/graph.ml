@@ -1,10 +1,19 @@
 (* [|42;42;42|] est un array *)
+let separator = '#'
 
 class graph nb_in learn_rate nperl =
 object (this)
-	val mutable _layers = Array.init (Array.length nperl - 1) (fun i -> new Layer.layer nperl.(i) (if i=0 then nb_in else nperl.(i-1)))
+	val mutable _layers = Array.init (Array.length nperl - 2) (fun i -> new Layer.layer nperl.(i) (if i=0 then nb_in else nperl.(i-1)))
 	val mutable _output = new Layer.layer nperl.(Array.length nperl - 1) nperl.(Array.length nperl - 2)
 
+	method to_string =
+		let a = Array.init (Array.length nperl) (fun i -> if i = Array.length nperl - 1 then _output#to_string else _layers.(i)#to_string) in
+		Stdlib.stringarray_to_string a separator
+	method get_layer i =
+		if i >= Array.length nperl - 1 then
+			_output
+		else
+			_layers.(i)
 	method training ain aout = (* entrees resultatsAttendus *)
 		let out = this#get_out ain in
 		for i=0 to _output#length - 1 do

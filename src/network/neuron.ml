@@ -1,3 +1,5 @@
+let separator = ';'
+
 let random = 
 	Random.self_init ();
 	fun () -> (if Random.bool () then 1. else -1.) *. (Random.float 0.5)
@@ -26,4 +28,12 @@ class neuron nb_in =
 	method error = _error
 	method serror e = _error <- e
 	method weight i = _weights.(i)
+	method set_weight t = _weights <- t
+	method to_string = Stdlib.floatarray_to_string _weights separator
     end
+
+let parse str = 
+	let a = Stdlib.string_to_floatarray str separator in
+	let n = new neuron (Array.length a) in
+	n#set_weight a;
+	n

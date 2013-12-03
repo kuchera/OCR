@@ -1,3 +1,5 @@
+let separator = '|'
+
 class layer nb_neuron nb_in =
 object (this)
 	val mutable _neurons = Array.init nb_neuron (fun _ -> new Neuron.neuron nb_in)
@@ -22,4 +24,16 @@ object (this)
 			_neurons.(i)#adjust_weight rate
 		done
 	method length = nb_neuron
+	method set_neuron i n = _neurons.(i) <- n
+	method to_string =
+		let nar = Array.init nb_neuron (fun i -> _neurons.(i)#to_string) in
+		(string_of_int nb_in) ^ (Stdlib.string_of_char separator) ^ (Stdlib.stringarray_to_string nar separator)
 end
+
+let parse str =
+	let nar = Stdlib.split_string2 str (Stdlib.string_of_char separator) in
+	let n = new layer (Array.length nar - 1) (int_of_string nar.(0)) in
+	for i=0 to Array.length nar - 1 do
+		n#set_neuron i (Neuron.parse (nar.(i + 1)))
+	done;
+	n

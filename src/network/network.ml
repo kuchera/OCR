@@ -9,4 +9,4 @@ let _ =
 	Printf.printf "%f\n" (g#get_out [|0.;0.|]).(0);
 	Printf.printf "%f\n" (g#get_out [|1.;0.|]).(0);
 	Printf.printf "%f\n" (g#get_out [|0.;1.|]).(0);
-	Printf.printf "%f\n" (g#get_out [|1.;1.|]).(0)
+	Printf.printf "%f\n" (g#get_out [|1.;1.|]).(0);
