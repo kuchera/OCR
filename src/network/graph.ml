@@ -1,14 +1,16 @@
 (* [|42;42;42|] est un array *)
 let separator = '#'
 
-class graph nb_in learn_rate nperl =
+class graph learn_rate nperl =
 object (this)
-	val mutable _layers = Array.init (Array.length nperl - 2) (fun i -> new Layer.layer nperl.(i) (if i=0 then nb_in else nperl.(i-1)))
+	val mutable _layers = Array.init (Array.length nperl - 2) (fun i -> new Layer.layer nperl.(i) (if i=0 then  nperl.(0) else nperl.(i-1)))
 	val mutable _output = new Layer.layer nperl.(Array.length nperl - 1) nperl.(Array.length nperl - 2)
 
-	method to_string =
-		let a = Array.init (Array.length nperl) (fun i -> if i = Array.length nperl - 1 then _output#to_string else _layers.(i)#to_string) in
-		Stdlib.stringarray_to_string a separator
+	method set_layers a =
+		_output <- a.(Array.length a - 1);
+		for i=0 to Array.length a - 1 do
+			_layers.(i) <- a.(i)
+		done
 	method get_layer i =
 		if i >= Array.length nperl - 1 then
 			_output
@@ -42,4 +44,20 @@ object (this)
 		done;
 		_output#set_allin _layers.(Array.length _layers - 1)#get_out;
 		_output#get_out
+	method to_string =
+		let a = Array.init (Array.length _layers) (fun i -> _layers.(i)#to_string) in
+		(string_of_float learn_rate) ^ (Stdlib.string_of_char separator) ^ (Stdlib.stringarray_to_string a separator) ^ (Stdlib.string_of_char separator) ^ (_output#to_string)
 end
+
+let parse str =
+	let a = Stdlib.split_string2 str (Stdlib.string_of_char separator) in
+	let lr = float_of_string (a.(0)) in
+	let a = Array.init (Array.length a - 1) (fun i -> Layer.parse (a.(i + 1))) in
+	let rec f i l =
+		if i >= 0 then 
+			f (i-1) ((a.(i)#length) :: l)
+		else
+			l in
+	let g = new graph lr (Stdlib.array_of_list (f (Array.length a - 1) [])) in
+	g#set_layers a;
+	g
