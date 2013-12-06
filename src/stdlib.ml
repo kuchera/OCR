@@ -51,21 +51,8 @@ let string_search s f =
 	!ret
 
 let split_string2 str sep =
-	let s = ref str and
-	l = ref [] in
-	while !s <> "" do
-		let p = string_search !s sep in
-		if p >= 0 then
-			(l := (ref (String.sub !s 0 p)) :: !l;
-			s := String.sub !s (p + String.length sep) (String.length !s - p - String.length sep);
-			if !s = "" then
-				l := (ref "") :: !l)
-		else
-			(l := s :: !l;
-			s := "")
-	done;
-	l := List.rev !l;
-	let a = string_list_to_array l in
+	let sep = sep.[0] in
+	let a = split_string str sep in
 	array_from_refarray a
 
 let string_of_int4 (a,b,c,d) sep =
@@ -117,12 +104,8 @@ let string_to_floatarray str separator =
 	let str = ref str in
 	str := remove_char_from !str '\n';
 	str := remove_char_from !str ' ';
-	let a = split_string !str separator in
-	let ret = Array.make (Array.length a) 0. in
-	Array.iteri (fun r v -> 
-		try ret.(r) <- float_of_string !v
-		with e -> ignore (failwith ("Cannot convert "^(!v)^" to float."))) a;
-	ret
+	let a = split_string2 (!str) (string_of_char separator) in
+	Array.init (Array.length a) (fun i -> float_of_string (a.(i)))
 
 let string_to_doublefloatarray str sep1 sep2 =
 	let a = split_string str sep1 in

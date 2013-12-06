@@ -14,6 +14,7 @@ class neuron nb_in =
 	val mutable _weights = Array.init nb_in (fun _ -> random ())
 	val mutable _error = 0.
 
+	method set_adjustement a = _adjustement <- a
 	method out = 
 		let out = ref 0. in
 		for i=0 to Array.length _inputs - 1 do
@@ -29,11 +30,12 @@ class neuron nb_in =
 	method serror e = _error <- e
 	method weight i = _weights.(i)
 	method set_weight t = _weights <- t
-	method to_string = Stdlib.floatarray_to_string _weights separator
+	method to_string = (string_of_float _adjustement) ^ (Stdlib.string_of_char separator) ^ (Stdlib.floatarray_to_string _weights separator)
     end
 
 let parse str = 
 	let a = Stdlib.string_to_floatarray str separator in
-	let n = new neuron (Array.length a) in
-	n#set_weight a;
+	let n = new neuron (Array.length a - 1) in
+	n#set_adjustement a.(0);
+	n#set_weight (Array.init (Array.length a - 1) (fun i -> a.(i+1)));
 	n

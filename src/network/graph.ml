@@ -8,9 +8,7 @@ object (this)
 
 	method set_layers a =
 		_output <- a.(Array.length a - 1);
-		for i=0 to Array.length a - 1 do
-			_layers.(i) <- a.(i)
-		done
+		_layers <- Array.init (Array.length a - 1) (fun i -> a.(i))
 	method get_layer i =
 		if i >= Array.length nperl - 1 then
 			_output
