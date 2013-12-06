@@ -13,6 +13,7 @@ class neuron :
     method error : float
     method out : float
     method serror : float -> unit
+    method set_adjustement : float -> unit
     method set_input : float array -> unit
     method set_weight : float array -> unit
     method to_string : string

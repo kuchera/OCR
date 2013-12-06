@@ -33,7 +33,7 @@ end
 let parse str =
 	let nar = Stdlib.split_string2 str (Stdlib.string_of_char separator) in
 	let n = new layer (Array.length nar - 1) (int_of_string nar.(0)) in
-	for i=0 to Array.length nar - 1 do
+	for i=0 to Array.length nar - 2 do
 		n#set_neuron i (Neuron.parse (nar.(i + 1)))
 	done;
 	n
