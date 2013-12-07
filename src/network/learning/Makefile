@@ -1,8 +1,8 @@
 OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
-EXEC= interface
-SRC= interface.ml
+EXEC= a.out
+SRC= 
 OBJ= $(SRC:.ml=.cmx)
 USED= stdlib.cmx iostream.cmx sdltools.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
@@ -17,13 +17,13 @@ modules: ${SRC} getobj
 exe: compile rmobj
 
 getobj:
-	cd .. && cp ${USED} ${USEDO} ./interface/
+	cd ../.. && cp ${USED} ${USEDO} ./network/learning/
 
 main:
-	cd .. && make
+	cd ../.. && make
 
 all:
-	cd .. && make all
+	cd ../.. && make all
 
 rmobj:
 	rm -f *~ *.o *.cm?
@@ -32,5 +32,4 @@ clean: rmobj
 	rm -f ${EXEC}
 
 mrproper:
-	cd .. && make mrproper
-	cd learning && make clean
+	cd ../.. && make mrproper

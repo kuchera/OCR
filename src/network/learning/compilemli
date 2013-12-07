@@ -1,0 +1,1 @@
+ocamlopt -I +sdl -I +site-lib/sdl bigarray.cmxa sdl.cmxa sdlloader.cmxa *.cmx *.mli -i $1.ml > $1.mli

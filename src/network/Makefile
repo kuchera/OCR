@@ -33,3 +33,4 @@ clean: rmobj
 
 mrproper:
 	cd .. && make mrproper
+	cd learning && make clean
