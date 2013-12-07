@@ -110,3 +110,20 @@ let string_to_floatarray str separator =
 let string_to_doublefloatarray str sep1 sep2 =
 	let a = split_string str sep1 in
 	let ret = Array.init (Array.length a) (function i -> string_to_floatarray !(a.(i)) sep2) in ret
+
+let intarray_to_string arr sep =
+	let s = ref "" in
+	for i=0 to Array.length arr - 2 do
+		s := !s ^ (string_of_int arr.(i)) ^ (string_of_char sep)
+	done;
+	!s ^ (string_of_int arr.(Array.length arr - 1))
+
+let intmat_to_string mat sep1 sep2 = 
+	let sa = Array.init (Array.length mat) (fun i -> intarray_to_string mat.(i) sep2) in
+	stringarray_to_string sa sep1
+
+let string_to_intmat str sep1 sep2 =
+	let sa = split_string2 str (string_of_char sep1) in
+	Array.init (Array.length sa) (fun i -> 
+		let ssa = split_string2 sa.(i) (string_of_char sep2) in
+		Array.init (Array.length ssa) (fun i -> int_of_string ssa.(i)))
