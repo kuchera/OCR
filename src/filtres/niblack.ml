@@ -14,8 +14,8 @@ let final_average l = (average l) /. float_of_int((List.length l) - 1)
 
 let get_arround matrix x y = 
     let l = ref [] in 
-    for i = x-1 to x+1 do
-        for j = y-1 to y+1 do
+    for i = x-4 to x+4 do
+        for j = y-2 to y+2 do
             try l := (matrix.(i).(j)) :: (!l) ; () with e -> () 
         done
     done;
