@@ -302,3 +302,14 @@ let detect ?(draw=false) image outfile =
 	let a = get_int4_array ~draw:draw image in
 	let sa = Array.init (Array.length a) (function i -> Stdlib.string_of_int4 (a.(i)) ";") in
 	Iostream.write_file outfile (Stdlib.stringarray_to_string sa '|')
+
+let detectChars img path =
+	let a = get_int4_array img in
+        let image = Sdlloader.load_image img in
+	for i = 0 to Array.length a do
+		let filepath = (path^(string_of_int i)^(".out")) in
+		let matrix = ToMatrix.getMatrix image a.(i) in
+		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
+		Iostream.write_file filepath chaine;
+	done;
+	Iostream.write_file (path^"count") (string_of_int (Array.length a))

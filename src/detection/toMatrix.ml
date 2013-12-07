@@ -23,3 +23,6 @@ let redimMatrix matrix =
 		done;
 	done;
 	new_matrix
+
+let getMatrix img e =
+	redimMatrix (rectToMatrix img e)
