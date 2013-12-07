@@ -2,7 +2,7 @@ OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= detection
-SRC= detect.ml detection.ml
+SRC= detect.ml detection.ml toMatrix.ml
 OBJ= $(SRC:.ml=.cmx)
 USED= stdlib.cmx sdltools.cmx iostream.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}

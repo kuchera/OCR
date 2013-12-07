@@ -1,9 +1,9 @@
 val reverse : 'a list -> 'a list
 val is_black : int * int * int -> bool
-val getYHist : Sdlvideo.surface -> int array
+val getYHist : Sdlvideo.surface -> (int*int*int*int) -> int array
 val getXHist : Sdlvideo.surface -> int * int -> int array
 val getLines :
-  ?prst:int -> ?misc:bool -> Sdlvideo.surface -> (int * int) list
+  ?prst:int -> ?misc:bool -> Sdlvideo.surface -> (int*int*int*int) -> (int * int) list
 val getChars :
   ?prst:int ->
   Sdlvideo.surface -> (int * int) list -> ((int * int) * (int * int)) list
