@@ -274,7 +274,7 @@ let detectText ?(mustDraw=false) imgPath =
         Sdltools.sdl_init ();
         let img = Sdlloader.load_image imgPath in
 	let (w, h) = Sdltools.get_img_dim img in
-	let blocsList = getBlocs ~prst:5 img in
+	(* let blocsList = getBlocs ~prst:5 img in *)
 	let linesList = getLines ~prst:5 ~misc:true img (0, w-1, 0, h-1) in
 	let charsList = getChars ~prst:1 img linesList in
 	if( mustDraw = true ) then
@@ -310,6 +310,6 @@ let detectChars img path =
 		let filepath = (path^(string_of_int i)^(".out")) in
 		let matrix = ToMatrix.getMatrix image a.(i) in
 		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
-		Iostream.write_file filepath chaine;
+		ignore (Iostream.write_file filepath chaine)
 	done;
-	Iostream.write_file (path^"count") (string_of_int (Array.length a))
+	ignore (Iostream.write_file (path^"count") (string_of_int (Array.length a)))

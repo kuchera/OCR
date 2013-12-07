@@ -24,3 +24,9 @@ rmobj:
 
 clean: rmobj
 	rm -f ${EXEC}
+
+main:
+	cd .. && make
+
+mrproper:
+	cd .. && make mrproper
