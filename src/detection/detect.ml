@@ -4,21 +4,40 @@ let reverse list1 =
 		| _ -> rl
 	in reverser [] list1
 
+let triCharList charList =
+	let rec sort = function
+	| [] -> []
+	| x :: l -> insert x (sort l)
+	and insert ((ebhi, ebl),(eblo, ebr)) = function
+  	| [] -> [((ebhi, ebl),(eblo, ebr))]
+  	| ((bhi, bl),(blo, br)) :: l -> 
+      	if ebhi < bhi then
+		((ebhi, ebl),(eblo, ebr)) :: ((bhi, bl),(blo, br)) :: l
+	else
+		if (ebhi = bhi) then
+			if (ebl < bl) then
+				((ebhi, ebl),(eblo, ebr)) :: ((bhi, bl),(blo, br)) :: l
+			else
+				((bhi, bl),(blo, br)) :: (insert ((ebhi, ebl),(eblo, ebr)) l)
+		else
+				((bhi, bl),(blo, br)) :: (insert ((ebhi, ebl),(eblo, ebr)) l)
+	in sort charList
+	
 let is_black (r, g, b) = match (r, g, b) with
 	|( 0, 0, 0) -> true
 	|_ -> false
-
-let getYHist img (xinf, xsup, yinf, ysup) =
-	let (w, h) = Sdltools.get_img_dim img in
-	let histogramme = Array.init h (fun _ -> 0) in
-	for j = yinf to ysup do
-		for i = xinf to xsup do 
-			let c = Sdlvideo.get_pixel_color img i j in
-				if (is_black c) then
-					histogramme.(j) <- histogramme.(j) + 1
-		done
-	done;
-	histogramme
+	
+let getYHist img (bl, br, bhi, blo) =
+	(*Printf.printf "bl = %d, br = %d, bhi = %d, blo = %d" bl br bhi blo;*)
+        let histogramme = Array.init (blo-bhi) (fun _ -> 0) in
+        for j = bhi to blo-1 do
+                for i = bl to br-1 do
+                        let c = Sdlvideo.get_pixel_color img i j in
+                                if (is_black c) then
+                                        histogramme.(j-bhi) <- histogramme.(j - bhi) + 1
+                done;
+        done;
+        histogramme
 
 let getXHist img (bs, bi) =
         let (w, h) = Sdltools.get_img_dim img in
@@ -32,19 +51,43 @@ let getXHist img (bs, bi) =
         done;
         histogramme
 
-let getLines ?(prst=0) ?(misc = false) img (xinf, xsup, yinf, ysup) = 
-	let (w, h) = Sdltools.get_img_dim img in 
-	let hist = getYHist img (xinf, xsup, yinf, ysup) in
+(*
+let drawHist img new_img (bhi, blo, bl ,br) =
+        let hist1 = getYHist img (bl, br, bhi, blo) in
+        let hist2 = getXHist img (bhi, blo) in
+        for j = bhi to blo-1 do
+                for i = 0 to (hist1.(j) / 10) do
+                        Sdlvideo.put_pixel_color new_img i j (30, 127, 230)
+                done
+        done;
+        for i = bl to br-1 do
+                for j = 0 to (hist2.(i) / 5) do
+                        Sdlvideo.put_pixel_color new_img i j (209, 182, 6)
+                done
+        done
+*)
+let isAnImg img (bhi, blo, bl, br) =
+        let histogramme = getYHist img (bl, br, bhi, blo) in
+        let rec cmpt = ref 0 in
+        for j = bhi to blo-1 do
+                if histogramme.(j - bhi) < 5 then
+                        cmpt := !cmpt +1
+        done;
+        (!cmpt < ((blo -bhi) / 10))
+
+let getLines ?(prst=0) ?(misc = false) img (bl, br, bhi, blo)= 
+	let (_, h) = Sdltools.get_img_dim img in 
+	let hist = getYHist img (bl, br, bhi, blo) in
 	let inLine = ref false in
 	let str = ref 0 in
 	let l = ref [] in
-	for j = 0 to h-1 do
-		match hist.(j) with
+	for j = bhi to blo-1 do
+		match hist.(j-bhi) with
 			| n when (not !inLine) && (n > prst) -> inLine := true;
 			  str := j;
 			| n when (!inLine) && (n < prst + 1) -> inLine := false;
 			  if (misc) then
-				let rec auxFunction = match ((j - !str) / 4) with
+				let rec auxFunction = match ((j - !str) / 8) with
 					|aux when (j+aux) >= h && (!str - aux) >= 0 -> l := (!str - aux, j)::!l
 					|aux when (j+aux) <= h && (!str - aux) <= 0 -> l := (!str, j + aux)::!l
 					|aux when (j+aux) <= h && (!str - aux) >= 0 -> l := (!str - aux, j + aux)::!l
@@ -62,15 +105,14 @@ let getLines ?(prst=0) ?(misc = false) img (xinf, xsup, yinf, ysup) =
 	in l := epur !l [];
 	!l
 
-let getChars ?(prst=0) img linesList =
-	let (w, h) = Sdltools.get_img_dim img in
+let getChars ?(prst=0) img linesList (bl, br) =
 	let inColumn = ref false in
 	let str = ref 0 in
 	let rectList = ref [] in
 	let rec getOneChar liste = match liste with
 		|(bs, bi)::l ->
 		 let hist = getXHist img (bs, bi) in 
-		 for i = 0 to w-1 do
+		 for i = bl to br-1 do
 			match hist.(i) with
 				| n when (not !inColumn) && (n > prst) ->
 				inColumn := true;
@@ -134,7 +176,7 @@ let getBlocs ?(prst=0) img =
 	let rec aux2 liste = match liste with
 		|v::l -> mIntV := (!mIntV) + v;
 			aux2 l
-		|_ -> mIntV := !mIntV / List.length lineslist
+		|_ -> mIntV := !mIntV / List.length !intValues
 	in aux2 !intValues;
 	let endBlocList = ref [] in
 	let rec aux3 liste b = match (liste, b) with
@@ -149,92 +191,67 @@ let getBlocs ?(prst=0) img =
 		|(e::l, b) -> listBlocsY := (e, b)::(!listBlocsY); fillYList l e
 		|_ -> listBlocsY := (0, b)::(!listBlocsY)
 	in fillYList !endBlocList (h-1);
-	(* Section des blocsY *)
-	let columnlist = getBlocColumns ~prst:(prst*2) img !listBlocsY in
-	let listBlocs = ref [] in
-        let rec getBlocList liste bleft bright b = match (liste, bleft, bright, b) with
-                |(((bhigh, bl),(blow, br))::l, brL, brR, b) when brL = -1 -> getBlocList l bl br bhigh
-                |(((bhigh, bl),(blow, br))::l, brL, brR, b) when b <> bhigh -> (listBlocs := (((bhigh, brL), (blow, (w-1)))::!listBlocs));
-                        getBlocList l (-1) br bhigh
-                |(((bhigh, bl),(blow, br))::l, brL, brR, b) when (bl - brR) < 50 -> getBlocList l brL br bhigh
-                |(((bhigh, bl),(blow, br))::l, brL, brR, b) -> listBlocs := (((bhigh, brR), (blow, brL))::!listBlocs); getBlocList l bl (-1) bhigh
-                |_ -> ()
-        in getBlocList columnlist (-1) (-1) (-1);
-	(*intValues := [];
-	let rec aux4 liste (b, t) = match (liste, (b, t)) with
-                |(((bhigh, bl), (blow, br))::l, (0, _)) -> aux4 l (br, bhigh);
-                |(((bhigh, bl), (blow, br))::l, (b, lbhi)) when b <> 0 ->
-		if lbhi = bhigh then intValues := (bl - b)::(!intValues);
-                aux4 liste (0, bhigh)
-                |_ -> ()
-        in aux4 columnlist (0, 0);
-	mIntV := 0;
-        let rec aux5 liste = match liste with
-                |v::l -> mIntV := (!mIntV) + v;
-                        aux5 l
-                |_ -> mIntV := !mIntV / List.length columnlist
-        in aux5 !intValues;
-	print_int !mIntV; *)
-	(*mIntV := 25;
-	let rec debug liste = match liste with
-		|((bhigh, bl),(blow, br))::l -> 
-		 Printf.printf "\n BORNE SUP :";
-                 print_int bhigh;
-                 Printf.printf "\n Borne INF :";
-                 print_int blow;
-                 Printf.printf "\n Borne gauche:";
-                 print_int bl;
-                 Printf.printf "\n Borne droite:";
-                 print_int br;
-		 debug l
-		|_ -> ()
-	in debug columnlist;
 	
-	let endBlocList2 = ref [] in 
-        let rec aux6 liste (b, t) = match (liste, (b, t)) with
-                |(((bhigh, bl),(blow, br))::l, (0, _)) -> aux6 l (bl, bhigh) 
-                |(((bhigh, bl),(blow, br))::l, (b, lbhi)) when b <> 0 -> 
-                        if ((lbhi = bhigh) && (b - br) > !mIntV) then (endBlocList2 := ((bhigh, blow, (br + ((b - br) /2)))::(!endBlocList2)));
-                        aux6 liste (0, bhigh)
-                |_ -> ()
-        in aux6 columnlist (w-1, 0);
-	*)
-	(*let rec fillList liste b = match (liste, b) with
-                |((bhigh, blow, bend)::l, b) -> listBlocs := ((bhigh, b), (blow, bend))::(!listBlocs); fillList l bend
-                |_ -> ()
-        in fillList !endBlocList2 (h-1);*)
-	!listBlocs
+	(* Section des blocsY *)
+	let columnslist = getBlocColumns ~prst:prst img (!listBlocsY) in
+	let intValues2 = ref [] in
+	let rec aux4 liste ((lbhi, lbl), (lblo, lbro)) = match (liste) with
+		|((bhi, bl), (blo, br))::l when ((lbl = -1)||(lbhi <> bhi)) -> aux4 l ((bhi, bl), (blo, br))
+		|((bhi, bl), (blo, br))::l -> intValues2 := (bl - lbro)::(!intValues2); aux4 l ((bhi, bl), (blo, br))
+		|_ -> ()
+	in aux4 columnslist ((-1, -1), (-1, -1));
+	let mIntV2 = ref 0 in
+        let rec aux5 liste = match liste with
+                |v::l -> mIntV2 := (!mIntV2 + v); aux5 l
+                |_ -> mIntV2 := !mIntV2  / List.length !intValues2
+        in aux5 !intValues2;
+	let listBlocs = ref [] in
+	let rec fillFinalList liste ((lbhi, lbl), (lblo, lbro)) blocstart = match liste with
+		|((bhi, bl), (blo, br))::[] when (blocstart = (-1, -1)) -> listBlocs := (((bhi, bl), (blo, br))::!listBlocs)
+		|((bhi, bl), (blo, br))::[] -> listBlocs := ((blocstart, (blo, br))::!listBlocs)
+		|((bhi, bl), (blo, br))::l when (lbl = -1) -> fillFinalList l ((bhi, bl), (blo, br)) (bhi, bl)
+		|((bhi, bl), (blo, br))::l when (lbhi <> bhi) -> 
+			let f liste = match liste with
+				|(_, e)::l when (e = (lblo, lbro)) -> ()
+				|_ -> listBlocs := ((blocstart, (lblo, lbro))::!listBlocs)
+			in f !listBlocs;
+			fillFinalList l ((bhi, bl), (blo, br)) (bhi, bl)
+		|((bhi, bl), (blo, br))::l when (bl - lbro) <= !mIntV2 -> fillFinalList l ((bhi, bl), (blo, br)) blocstart
+		|((bhi, bl), (blo, br))::l ->  listBlocs := ((blocstart, (lblo, lbro))::!listBlocs); fillFinalList l ((bhi, bl), (blo, br)) (bhi, bl)
+		|[] -> ()
+	in fillFinalList columnslist ((-1, -1), (-1, -1)) (-1, -1);
+	
+	(*Epuration des blocs*)
+	let rec epur l1 l2 = match l1 with
+                |((bhi, bl),(blo, br))::l ->
+			if ( isAnImg img (bhi, blo, bl, br) ) then
+                		epur l l2
+			else
+				epur l (((bhi, bl),(blo, br))::l2)
+		|_ -> l2
+        in epur !listBlocs [] 
 	
 
 (* DRAW FUNCTIONS *)
 let drawBlocs new_img blocsList =
 	let rec drawBlocs liste = match liste with
-                |((bs, x1),(bi, x2))::l ->
-                 for i = x1 to x2 do
+                |((bs, bl),(bi, br))::l->
+                 for i = bl to br-1 do
                         Sdlvideo.put_pixel_color new_img i bs (0, 255, 0);
                         Sdlvideo.put_pixel_color new_img i bi (0, 255, 0);
                  done;
-		 for j = bs to bi do
-                        Sdlvideo.put_pixel_color new_img x1 j (0, 255, 0);
-                        Sdlvideo.put_pixel_color new_img x2 j (0, 255, 0);
+		 for j = bs to bi-1 do
+                        Sdlvideo.put_pixel_color new_img bl j (0, 255, 0);
+                        Sdlvideo.put_pixel_color new_img br j (0, 255, 0);
                  done;
-		 (*printf.printf "\n BORNE SUP :";
-		 print_int bs;
-		 Printf.printf "\n Borne INF :";
-		 print_int bi;
-		 Printf.printf "\n Borne gauche:";
-                 print_int x1;
-		 Printf.printf "\n Borne droite:";
-		 print_int x2;*)
                  drawBlocs l;
                 |_ -> ()
         in drawBlocs blocsList
 
-let drawLines new_img linesList =
-	let (w, h) = Sdltools.get_img_dim new_img in 
+let drawLines new_img linesList (bl, br)= 
         let rec drawLines liste = match liste with
                 |(bs, bi)::l ->
-                for i = 0 to w-1 do
+                for i = bl to br-1 do
                         Sdlvideo.put_pixel_color new_img i bs (255, 0, 0);
                         Sdlvideo.put_pixel_color new_img i bi (255, 0, 0);
                 done;
@@ -242,54 +259,56 @@ let drawLines new_img linesList =
                 |_ -> ()
         in drawLines linesList
 
-
+(*
 let drawChars new_img charsList = 
 	let rec drawColumns liste = match liste with
 		|((bs, x1),(bi, x2))::l ->
-                 for j = bs to bi do
+                 for j = bs to bi-1 do
                         Sdlvideo.put_pixel_color new_img x1 j (0, 0, 255);
                         Sdlvideo.put_pixel_color new_img x2 j (0, 0, 255);
                  done;
 		 drawColumns l;
 		|_ -> ()
-	in drawColumns charsList
-			
+	in drawColumns charsList			
+*)
 
-let drawHist img new_img =
-	let (w, h) = Sdltools.get_img_dim img in 
-	let hist1 = getYHist img (0, w-1, 0, h-1) in
-	let hist2 = getXHist img (0, h-1) in
-	for j = 0 to h-1 do
-		for i = 0 to (hist1.(j) / 10) do
-                	Sdlvideo.put_pixel_color new_img i j (30, 127, 230)
-		done
-	done;
-	for i = 0 to w-1 do
-        	for j = 0 to (hist2.(i) / 5) do
-                        Sdlvideo.put_pixel_color new_img i j (209, 182, 6)
-                done
-        done
 
+let getAllChars blocList img =
+	let charsList = ref [] in
+	let rec fillList bliste = match bliste with
+		|((bhi, bl), (blo, br))::l ->
+			let linesList = getLines ~prst:3 ~misc:true img (bl, br, bhi, blo) in
+			let blocCharsList = getChars ~prst:0 img linesList (bl, br) in
+			charsList := blocCharsList@(!charsList);
+			fillList l
+		|_ -> ()
+	in fillList blocList;
+	!charsList
+	
 let detectText ?(mustDraw=false) imgPath =
         Sdltools.sdl_init ();
         let img = Sdlloader.load_image imgPath in
 	let (w, h) = Sdltools.get_img_dim img in
-	(* let blocsList = getBlocs ~prst:5 img in *)
-	let linesList = getLines ~prst:5 ~misc:true img (0, w-1, 0, h-1) in
-	let charsList = getChars ~prst:1 img linesList in
+	let blocsList = getBlocs ~prst:2 img in	
+	let charsList = getAllChars blocsList img in
+	(*let linesList = getLines ~prst:2 ~misc:true img (0, w-1, 0, h-1) in
+	let charsList = getChars ~prst:1 img linesList (0, w-1)in*)
+	(*Triage de la liste de chars*)
+	let sortedCharsList = triCharList charsList in
 	if( mustDraw = true ) then
 	begin
                	let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
 		let new_img = Sdlloader.load_image imgPath in
-		drawHist img new_img;
-		drawChars new_img charsList;
-		drawLines new_img linesList;
-		(*drawLines new_img blocsList;*)
+		(*drawHist img new_img;*)
+		(*drawChars new_img charsList;*)
+		(*drawLines new_img linesList;*)
 		(*drawBlocs new_img blocsList;*)
+		drawBlocs new_img sortedCharsList;
 		Sdltools.show_img new_img display;
 		Sdltools.wait_key();
 	end;
-	charsList
+	sortedCharsList
+
 
 let get_int4_array ?(draw=false) image =
 	let l = ref (detectText ~mustDraw:draw image) in

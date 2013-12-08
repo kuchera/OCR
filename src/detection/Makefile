@@ -6,7 +6,7 @@ SRC= toMatrix.ml detect.ml detection.ml
 OBJ= $(SRC:.ml=.cmx)
 USED= stdlib.cmx sdltools.cmx iostream.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
-MLI= detect.mli
+#MLI= detect.mli
  
 compile: modules
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${USED} ${OBJ}
