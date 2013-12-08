@@ -295,7 +295,7 @@ let get_int4_array ?(draw=false) image =
 	let l = ref (detectText ~mustDraw:draw image) in
 	Array.init (List.length !l) (function _ -> 
 		match !l with
-			| ((bs,bl),(bi,br))::f -> l := f ; (bs, bl, (bi-bs), (br-bl))
+			| ((bs,bl),(bi,br))::f -> l := f ; (bl, bs, (bi-bs), (br-bl))
 			| _ -> failwith "Error in : Detect.detect")
 
 let detect ?(draw=false) image outfile =
@@ -307,7 +307,7 @@ let detectChars img path =
 	let a = get_int4_array ~draw:true img in
 	let size = int_of_string (Iostream.read_file (path^"size")) in
 	for i = 0 to (((Array.length a) -1)) do
-		let filepath = (path^(string_of_int i)^(".mat")) in
+		let filepath = (path^(string_of_int (i+1))^(".mat")) in
 		let matrix = ToMatrix.getMatrix size img (a.(i)) in
 		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
 		(*if (i = 0) then print_string chaine;*)

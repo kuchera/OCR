@@ -2,16 +2,25 @@ let is_black (r, g, b) = match (r, g, b) with
         |( 0, 0, 0) -> true
         |_ -> false
 
-let rectToMatrix img (x,y,haut,larg) = 
-	let matrix = Array.init larg (fun _ -> Array.init haut (fun _ -> 0) ) in
-	for i = x to x+larg-1 do
-		for j = y to y+haut-1 do
+let rectToMatrix img (x,y,haut,larg) =
+	(*Printf.printf "X = %D, Y = %d, Haut = %d, LArg = %d" x y haut larg;*)
+	let matrix = Array.init haut (fun _ -> Array.init larg (fun _ -> 0) ) in
+	for j = y to y+haut-1 do
+		for i = x to x+larg-1 do
 			let c = Sdlvideo.get_pixel_color img i j in
 			if (is_black c) then
-				matrix.(i-x).(j-y) <- 1;
+				matrix.(j-y).(i-x) <- 1;
 			Sdlvideo.put_pixel_color img i j (0, 0, 255);
 		done;
 	done;
+	(*
+	for i = 0 to haut-1 do
+		for j = 0 to larg-1 do
+			print_int matrix.(i).(j)
+		done;
+		Printf.printf "\n";
+	done;
+	*)
 	matrix
 
 let redimMatrix size matrix =
