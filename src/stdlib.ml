@@ -126,4 +126,18 @@ let string_to_intmat str sep1 sep2 =
 	let sa = split_string2 str (string_of_char sep1) in
 	Array.init (Array.length sa) (fun i -> 
 		let ssa = split_string2 sa.(i) (string_of_char sep2) in
-		Array.init (Array.length ssa) (fun i -> int_of_string ssa.(i)))
+	Array.init (Array.length ssa) (fun i -> int_of_string ssa.(i)))
+
+let float_array_max a = 
+	let m = ref 0. in
+	Array.iter (fun e -> if e > !m then m := e) a;
+	!m
+
+let intmat_to_floatarr m =
+	let l = ref [] in
+	Array.iter (fun e ->
+		Array.iter (fun ee ->
+			l := (float_of_int ee) :: !l
+		) e
+	) m;
+	array_of_list (List.rev !l)

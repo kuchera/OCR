@@ -18,3 +18,5 @@ val string_to_doublefloatarray : string -> char -> char -> float array array
 val intarray_to_string : int array -> char -> string
 val intmat_to_string : int array array -> char -> char -> string
 val string_to_intmat : string -> char -> char -> int array array
+val float_array_max : float array -> float
+val intmat_to_floatarr : int array array -> float array

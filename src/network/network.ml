@@ -1,12 +1,11 @@
-let dirdetect = "files/network/"
 
-let show i =
-	let s = Iostream.read_file (dirdetect ^ "detected/"^(string_of_int i)^".mat") in
-	let a = Stdlib.string_to_intmat s '|' ';' in
-	Array.iter (fun e ->
-		Array.iter (fun ee -> Printf.printf "%d " ee) e;
-		Printf.printf "\n") a
-
-
-let f =
-	Learn.learn ()
+let _ = 
+	if Array.length Sys.argv = 1 then 
+		()
+	else if Sys.argv.(1) = "learn" then
+		((if Array.length Sys.argv = 3 then
+			ignore (Iostream.write_file "files/network/iter" Sys.argv.(2)));
+		Learn.learn ())
+	else
+		(Printf.printf "%s - read\n" Sys.argv.(0);
+		Printf.printf "%s learn [iter] - launches the learning phase (iter is optionnal)\n" Sys.argv.(0))
