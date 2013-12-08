@@ -38,6 +38,8 @@ out: allexe
 	cp rotation/rotation out/
 	cp detection/detection out/
 	cp network/network out/
+	cp -r detection/files ./
+	cp -r network/files ./
 	make rmexe
 	cp -r files/ out/files/
 

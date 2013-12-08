@@ -32,7 +32,11 @@ rmobj:
 
 clean: rmobj
 	rm -f ${EXEC}
+	rm -f ./files/network/detected/*
 
 mrproper:
 	cd ${MAINPATH} && make mrproper
 	cd learning && make clean
+
+getl:
+	cp ../detection/files/network/detected/* ./files/network/detected/
