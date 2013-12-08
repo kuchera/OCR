@@ -30,6 +30,7 @@ let redimMatrix matrix =
 	done;
 	new_matrix
 
+(*fction a utiliser*)
 let getMatrix imgPath e =
 	Sdltools.sdl_init ();
 	let img = Sdlloader.load_image imgPath in

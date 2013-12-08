@@ -306,7 +306,7 @@ let detect ?(draw=false) image outfile =
 let detectChars img path =
 	let a = get_int4_array img in
 	for i = 0 to ((Array.length a) -1) do
-		let filepath = (path^(string_of_int i)^(".out")) in
+		let filepath = (path^(string_of_int i)^(".mat")) in
 		let matrix = ToMatrix.getMatrix img (a.(i)) in
 		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
 		if (i = 0) then print_string chaine;
