@@ -24,6 +24,7 @@ rmobj:
 
 clean: rmobj
 	rm -f ${EXEC}
+	rm -f ./files/network/detected/*.mat
 
 main:
 	cd .. && make
