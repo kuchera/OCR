@@ -305,13 +305,12 @@ let detect ?(draw=false) image outfile =
 
 let detectChars img path =
 	let a = get_int4_array img in
+	let size = int_of_string (Iostream.read_file (path^"size")) in
 	for i = 0 to ((Array.length a) -1) do
 		let filepath = (path^(string_of_int i)^(".mat")) in
-		let matrix = ToMatrix.getMatrix img (a.(i)) in
+		let matrix = ToMatrix.getMatrix size img (a.(i)) in
 		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
 		if (i = 0) then print_string chaine;
 		ignore (Iostream.write_file filepath chaine)
 	done;
 	ignore (Iostream.write_file (path^"count") (string_of_int (Array.length a)))
-
-let _ = get_int4_array ~draw:true Sys.argv.(1)

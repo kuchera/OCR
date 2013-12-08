@@ -19,19 +19,19 @@ let rectToMatrix img (x,y,larg,haut) =
 	done;
 	matrix
 
-let redimMatrix matrix =
-	let new_matrix = Array.init 100 (fun _ -> Array.init 100 (fun _ -> 0) ) in
-	let coefX = float (Array.length matrix) /. 100. in
-	let coefY = float (Array.length matrix.(1)) /. 100. in
-	for i = 0 to 99 do
-		for j = 0 to 99 do
+let redimMatrix size matrix =
+	let new_matrix = Array.init size (fun _ -> Array.init size (fun _ -> 0) ) in
+	let coefX = float (Array.length matrix) /. (float (size)) in
+	let coefY = float (Array.length matrix.(1)) /. (float (size)) in
+	for i = 0 to size-1 do
+		for j = 0 to size-1 do
 			new_matrix.(i).(j) <- matrix.((int_of_float (float(i) *. coefX))).((int_of_float (float(j) *. coefY)))
 		done;
 	done;
 	new_matrix
 
 (*fction a utiliser*)
-let getMatrix imgPath e =
+let getMatrix size imgPath e =
 	Sdltools.sdl_init ();
 	let img = Sdlloader.load_image imgPath in
-        redimMatrix (rectToMatrix img e)
+        redimMatrix size (rectToMatrix img e)
