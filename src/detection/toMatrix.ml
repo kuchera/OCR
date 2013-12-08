@@ -2,19 +2,14 @@ let is_black (r, g, b) = match (r, g, b) with
         |( 0, 0, 0) -> true
         |_ -> false
 
-let rectToMatrix img (x,y,larg,haut) = 
+let rectToMatrix img (x,y,haut,larg) = 
 	let matrix = Array.init larg (fun _ -> Array.init haut (fun _ -> 0) ) in
-	let (w, h) = Sdltools.get_img_dim img in
 	for i = x to x+larg-1 do
 		for j = y to y+haut-1 do
-			if ( i > 0 && i < w && j > 0 && j < h) then
-			begin
-				let c = Sdlvideo.get_pixel_color img i j in
-				if (is_black c) then
-				begin
-					matrix.(i-x).(j-y) <- 1;
-				end;
-			end;
+			let c = Sdlvideo.get_pixel_color img i j in
+			if (is_black c) then
+				matrix.(i-x).(j-y) <- 1;
+			Sdlvideo.put_pixel_color img i j (0, 0, 255);
 		done;
 	done;
 	matrix
@@ -30,8 +25,13 @@ let redimMatrix size matrix =
 	done;
 	new_matrix
 
-(*fction a utiliser*)
+(*fonction a utiliser*)
 let getMatrix size imgPath e =
 	Sdltools.sdl_init ();
 	let img = Sdlloader.load_image imgPath in
-        redimMatrix size (rectToMatrix img e)
+	redimMatrix size (rectToMatrix img e);
+	(*let (w, h) = Sdltools.get_img_dim img in
+	let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+        Sdltools.show_img img display;
+        Sdltools.wait_key();
+	ar2send*)
