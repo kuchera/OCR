@@ -306,9 +306,11 @@ let detect ?(draw=false) image outfile =
 let detectChars img path =
 	let a = get_int4_array img in
         let image = Sdlloader.load_image img in
-	for i = 0 to Array.length a do
+	(*print_int ((Array.length a) -1);*)
+	for i = 0 to ((Array.length a) -1) do
+		(*Printf.printf "\n %d \n" i;*)
 		let filepath = (path^(string_of_int i)^(".out")) in
-		let matrix = ToMatrix.getMatrix image a.(i) in
+		let matrix = ToMatrix.getMatrix image (a.(i)) in
 		let chaine = Stdlib.intmat_to_string matrix '|' ';' in
 		ignore (Iostream.write_file filepath chaine)
 	done;
