@@ -76,7 +76,7 @@ let isAnImg img (bhi, blo, bl, br) =
         (!cmpt < ((blo -bhi) / 10))
 
 let getLines ?(prst=0) ?(misc = false) img (bl, br, bhi, blo)= 
-	let (_, h) = Sdltools.get_img_dim img in 
+	let (w, h) = Sdltools.get_img_dim img in 
 	let hist = getYHist img (bl, br, bhi, blo) in
 	let inLine = ref false in
 	let str = ref 0 in
@@ -103,6 +103,9 @@ let getLines ?(prst=0) ?(misc = false) img (bl, br, bhi, blo)=
 		|(bs, bi)::l -> epur l ((bs, bi)::l2)
 		|[] -> l2
 	in l := epur !l [];
+        (*gestion erreur*)
+        if (List.length !l = 0) then
+            l := (0,(h-1))::[];
 	!l
 
 let getChars ?(prst=0) img linesList (bl, br) =
@@ -111,7 +114,7 @@ let getChars ?(prst=0) img linesList (bl, br) =
 	let rectList = ref [] in
 	let rec getOneChar liste = match liste with
 		|(bs, bi)::l ->
-		 let hist = getXHist img (bs, bi) in 
+		 let hist = getXHist img (bs, bi) in
 		 for i = bl to br-1 do
 			match hist.(i) with
 				| n when (not !inColumn) && (n > prst) ->
@@ -141,6 +144,11 @@ let getBlocColumns ?(prst=0) img blocsListY =
         let rec getOneBloc liste = match liste with
                 |(bhigh, blow)::l ->
                  let hist = getXHist img (bhigh, blow) in
+                 if (hist.(0) > prst) then 
+                 begin    
+                     inColumn := true; 
+                     str := 0
+                 end;
                  for i = 0 to w-1 do
                         match hist.(i) with
                                 | n when (not !inColumn) && (n > prst) ->
@@ -176,13 +184,17 @@ let getBlocs ?(prst=0) img =
 	let rec aux2 liste = match liste with
 		|v::l -> mIntV := (!mIntV) + v;
 			aux2 l
-		|_ -> mIntV := !mIntV / List.length !intValues
+		|_ -> 
+                        if  List.length !intValues <> 0 then
+                            mIntV := !mIntV / List.length !intValues
+                        else
+                            mIntV := 1000
 	in aux2 !intValues;
 	let endBlocList = ref [] in
 	let rec aux3 liste b = match (liste, b) with
                 |((bhigh, blow)::l, 0) -> aux3 l blow
                 |((bhigh, blow)::l, b) when b <> 0 -> 
-			if ((bhigh - b) > !mIntV) then (endBlocList := ((b + ((bhigh - b) /2))::(!endBlocList)));
+			if ((bhigh - b) > !mIntV) then (endBlocList := ((b + 10 + ((bhigh - b) /2))::(!endBlocList)));
 			aux3 liste 0
 		|_ -> ()
 	in aux3 lineslist 0;
@@ -203,7 +215,7 @@ let getBlocs ?(prst=0) img =
 	let mIntV2 = ref 0 in
         let rec aux5 liste = match liste with
                 |v::l -> mIntV2 := (!mIntV2 + v); aux5 l
-                |_ -> mIntV2 := !mIntV2  / List.length !intValues2
+                |_ -> mIntV2 := (int_of_float (float(!mIntV2)*.1.2))  / List.length !intValues2
         in aux5 !intValues2;
 	let listBlocs = ref [] in
 	let rec fillFinalList liste ((lbhi, lbl), (lblo, lbro)) blocstart = match liste with
@@ -277,7 +289,7 @@ let getAllChars blocList img =
 	let charsList = ref [] in
 	let rec fillList bliste = match bliste with
 		|((bhi, bl), (blo, br))::l ->
-			let linesList = getLines ~prst:3 ~misc:true img (bl, br, bhi, blo) in
+			let linesList = getLines ~prst:2 ~misc:true img (bl, br, bhi, blo) in
 			let blocCharsList = getChars ~prst:0 img linesList (bl, br) in
 			charsList := blocCharsList@(!charsList);
 			fillList l
