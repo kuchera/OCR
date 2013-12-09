@@ -15,7 +15,6 @@ object (this)
 		else
 			_layers.(i)
 	method training ain aout = (* entrees resultatsAttendus *)
-                Printf.printf "%d %d\n" (Array.length ain) (Array.length aout);
 		let out = this#get_out ain in
 		for i=0 to _output#length - 1 do
 			_output#serror i (out.(i) *. (1. -. out.(i)) *. (aout.(i) -. out.(i)))
