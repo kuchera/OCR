@@ -156,7 +156,7 @@ let getBlocColumns ?(prst=0) img blocsListY =
                                 str := i;
                                 | n when (!inColumn) && (n < prst + 1) ->
                                 inColumn := false;
-                                rectList := ((bhigh, !str - 1),(blow, i + 1))::!rectList;
+                                rectList := ((bhigh, !str - 1),(blow, i + 5))::!rectList;
                                 |_ -> ()
                  done;
                  getOneBloc l;
@@ -317,6 +317,7 @@ let detectText ?(mustDraw=false) imgPath =
 		(*drawBlocs new_img blocsList;*)
 		drawBlocs new_img sortedCharsList;
 		Sdltools.show_img new_img display;
+                Sdltools.save "files/out.bmp" new_img;
 		Sdltools.wait_key();
 	end;
 	sortedCharsList
