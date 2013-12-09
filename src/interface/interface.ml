@@ -90,7 +90,7 @@ let _open =
     ignore (button#connect#clicked ~callback: (ask_for_file window));
    button 
 
-let binarize () = (ignore)(Sys.command ("./filtres niblack "^ !img ^" img.bmp"))
+let binarize () = (ignore)(Sys.command ("./filtres niblack "^ !img ^" ./files/img.bmp"))
 let binarisation = 
         let bin = GButton.button
          ~label:"Binarize"   
@@ -99,7 +99,7 @@ let binarisation =
         image#set_file 
             
 
-let rot  () = (ignore)(Sys.command ("./rotation "^ !img ^ " img_rot.bmp"))
+let rot  () = (ignore)(Sys.command ("./rotation "^ !img ^ " ./files/img_rot.bmp"))
 let rotation = 
         let bin = GButton.button
             ~label:"Rotation"   
@@ -107,7 +107,7 @@ let rotation =
         bin#connect#clicked rot 
 
 
-let detect () = (ignore)(Sys.command ("./detection "^ !img ^ "img_detect.bmp"))
+let detect () = (ignore)(Sys.command ("./detection "^ !img ^ " img_detect.bmp"))
 let detection = 
         let bin = GButton.button
             ~label:"Detection"
