@@ -300,25 +300,25 @@ let getAllChars blocList img =
 let detectText ?(mustDraw=false) imgPath =
         Sdltools.sdl_init ();
         let img = Sdlloader.load_image imgPath in
-	let (w, h) = Sdltools.get_img_dim img in
+	(*let (w, h) = Sdltools.get_img_dim img in*)
 	let blocsList = getBlocs ~prst:2 img in	
 	let charsList = getAllChars blocsList img in
 	(*let linesList = getLines ~prst:2 ~misc:true img (0, w-1, 0, h-1) in
 	let charsList = getChars ~prst:1 img linesList (0, w-1)in*)
 	(*Triage de la liste de chars*)
 	let sortedCharsList = triCharList charsList in
-	if( mustDraw = true ) then
+	if( (*mustDraw =*) true ) then
 	begin
-               	let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+               	(*let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in*)
 		let new_img = Sdlloader.load_image imgPath in
 		(*drawHist img new_img;*)
 		(*drawChars new_img charsList;*)
 		(*drawLines new_img linesList;*)
 		(*drawBlocs new_img blocsList;*)
 		drawBlocs new_img sortedCharsList;
-		Sdltools.show_img new_img display;
-                Sdltools.save "files/out.bmp" new_img;
-		Sdltools.wait_key();
+		(*Sdltools.show_img new_img display;*)
+                Sdltools.save "files/outdet.bmp" new_img;
+		(*Sdltools.wait_key();*)
 	end;
 	sortedCharsList
 

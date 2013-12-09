@@ -4,7 +4,7 @@ let window =
     ~title:"Button box demo"
     ~position:`CENTER 
     ~resizable:true
-    ~width:1000 ~height:1000 () 
+    ~width:1200 ~height:1000 () 
   
 
 let vbox = GPack.vbox 
@@ -57,8 +57,8 @@ let change btn () = Gaux.may x btn#filename
 
 
 let bbox = GPack.button_box `HORIZONTAL
-  ~layout:`EDGE (* C'est ici que l'on choisit la disposition des boutons. *)
-  ~border_width:2
+  ~layout:`SPREAD (* C'est ici que l'on choisit la disposition des boutons. *)
+  ~border_width:1
   ~packing:(vbox#pack ~expand:false) ()
 
 
@@ -95,7 +95,7 @@ let binarisation =
         let bin = GButton.button
          ~label:"Binarize"   
          ~packing:bbox#add () in
-        bin#connect#clicked binarize;
+        ignore (bin#connect#clicked binarize);
         image#set_file 
             
 
@@ -107,7 +107,7 @@ let rotation =
         bin#connect#clicked rot 
 
 
-let detect () = (ignore)(Sys.command ("./detection "^ !img))
+let detect () = (ignore)(Sys.command ("./detection "^ !img ^ "img_detect.bmp"))
 let detection = 
         let bin = GButton.button
             ~label:"Detection"
