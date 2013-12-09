@@ -194,7 +194,11 @@ let getBlocs ?(prst=0) img =
 	let rec aux3 liste b = match (liste, b) with
                 |((bhigh, blow)::l, 0) -> aux3 l blow
                 |((bhigh, blow)::l, b) when b <> 0 -> 
+<<<<<<< HEAD
 			if ((bhigh - b) > !mIntV) then (endBlocList := ((b + ((bhigh - b) /2))::(!endBlocList)));
+=======
+			if ((bhigh - b) > !mIntV) then (endBlocList := ((b + 10 + ((bhigh - b) /2))::(!endBlocList)));
+>>>>>>> c137509bcbed020ce214ef2e074344539e1ff40d
 			aux3 liste 0
 		|_ -> ()
 	in aux3 lineslist 0;
@@ -317,7 +321,10 @@ let detectText ?(mustDraw=false) imgPath =
 		(*drawBlocs new_img blocsList;*)
 		drawBlocs new_img sortedCharsList;
 		Sdltools.show_img new_img display;
+<<<<<<< HEAD
                 Sdltools.save "files/out.bmp" new_img;
+=======
+>>>>>>> c137509bcbed020ce214ef2e074344539e1ff40d
 		Sdltools.wait_key();
 	end;
 	sortedCharsList

@@ -27,9 +27,13 @@ let scroll = GBin.scrolled_window
 let img = ref ""
 
 
-let image = GMisc.image
-	~packing:scroll#add_with_viewport () 
-	
+let image = 
+    let buf = GdkPixbuf.create
+        ~width:750
+        ~height:600 () in
+    GMisc.image
+        ~pixbuf:buf
+        ~packing:scroll#add_with_viewport () 
 
 let view = GText.view 
 	~packing:vbox#add 
@@ -86,15 +90,16 @@ let _open =
     ignore (button#connect#clicked ~callback: (ask_for_file window));
    button 
 
-let binarize () = (ignore)(Sys.command ("./binarize "^ !img))
+let binarize () = (ignore)(Sys.command ("./filtres niblack "^ !img ^" img.bmp"))
 let binarisation = 
         let bin = GButton.button
          ~label:"Binarize"   
          ~packing:bbox#add () in
-        bin#connect#clicked binarize
+        bin#connect#clicked binarize;
+        image#set_file 
             
 
-let rot  () = (ignore)(Sys.command ("./rotation "^ !img))
+let rot  () = (ignore)(Sys.command ("./rotation "^ !img ^ " img_rot.bmp"))
 let rotation = 
         let bin = GButton.button
             ~label:"Rotation"   
@@ -102,14 +107,14 @@ let rotation =
         bin#connect#clicked rot 
 
 
-let detect () = (ignore)(Sys.command ("./detect "^ !img))
+let detect () = (ignore)(Sys.command ("./detection "^ !img))
 let detection = 
         let bin = GButton.button
             ~label:"Detection"
             ~packing:bbox#add () in
         bin#connect#clicked detect
 
-let r () = (ignore)(Sys.command ("./detect "^ !img))
+let r () = (ignore)(Sys.command ("./network "^ !img))
 let read = 
         let bin = GButton.button
             ~label:"Read"
@@ -124,15 +129,40 @@ let all =
             ~packing:bbox#add () in
         bin#connect#clicked a
 
-(*let print () =Printf.printf "Select an image and apply what you want with the
-several buttons./n"
 
-let help = 
-	let hlp = GButton.button 
-		~stock:`HELP 
-		~packing:bbox#add () in
-	hlp#connect#clicked print
-*)
+let zoom scale =
+    let s = scale in
+    let pb0 = image#pixbuf in
+    let w = int_of_float (float (GdkPixbuf.get_width pb0) *. s) in
+    let h = int_of_float (float (GdkPixbuf.get_height pb0) *. s) in
+    let pb = GdkPixbuf.from_file_at_size !img w h in
+    image#set_pixbuf pb
+
+let zoomin _ =
+    if (!img <> "") then
+        zoom 1.1
+    else ()
+
+let zoomout _ = 
+    if(!img <> "") then
+        zoom 0.9
+    else ()
+
+
+let zoom_in = 
+        let zi = GButton.button
+            ~stock:`ZOOM_IN
+            ~packing:bbox#add () in
+        ignore (zi#connect#clicked ~callback:zoomin)
+
+
+let zoom_out = 
+        let zo = GButton.button
+            ~stock:`ZOOM_OUT
+            ~packing:bbox#add () in
+        ignore (zo#connect#clicked ~callback:zoomout)
+
+
 let about_button = 
     let dlg = GWindow.about_dialog
     ~authors:["Eugene Kuchera";"Yassine Razani";"Alain Gbedo";"Arthur D'avray"]
@@ -159,7 +189,12 @@ let quit =
 	let qit = GButton.button 
 	~stock:`QUIT 
 	~packing:bbox#add () in
-	qit#connect#clicked ~callback:GMain.quit  
+	qit#connect#clicked ~callback:GMain.quit 
+
+
+
+
+
 let _ =
     destroy ();
     window#show ();

@@ -2,11 +2,11 @@ OCAML=ocamlopt
 OCAMLFLAGS= -I +sdl -I +site-lib/sdl
 OCAMLLD= bigarray.cmxa sdl.cmxa sdlloader.cmxa
 EXEC= filtres
-SRC= niblack.ml
+SRC= binarisation.ml bruit.ml niblack.ml filtre.ml
 OBJ= $(SRC:.ml=.cmx)
 USED= stdlib.cmx iostream.cmx sdltools.cmx
 USEDO= ${USED:.cmx=.o} ${USED:.cmx=.cmi}
-MLI= niblack.mli
+MLI= 
  
 compile: modules
 	${OCAML} ${OCAMLFLAGS} ${OCAMLLD} -o ${EXEC} ${USED} ${OBJ}

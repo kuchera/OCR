@@ -56,7 +56,7 @@ rmexe:
 
 clean:: rmobj
 	rm -f ${EXEC}
-	rm -rf out/
+	rm -rf out/*
 
 mrproper: clean
 	cd network && make clean
