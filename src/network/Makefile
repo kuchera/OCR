@@ -32,7 +32,7 @@ rmobj:
 
 clean: rmobj
 	rm -f ${EXEC}
-	rm -f ./files/network/detected/*
+	rm -f ./files/network/detected/*.mat
 
 mrproper:
 	cd ${MAINPATH} && make mrproper

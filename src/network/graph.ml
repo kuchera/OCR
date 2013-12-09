@@ -43,12 +43,13 @@ object (this)
 		_output#set_allin _layers.(Array.length _layers - 1)#get_out;
 		_output#get_out
 	method get_max_out ain =
-		let m = ref 0. in
-		Array.iter (fun e -> if e > !m then m := e) (this#get_out ain);
-		!m
+		let m = ref 0. and r = ref 0 in
+		Array.iteri (fun i e -> if e > !m then (m := e; r := i)) (this#get_out ain);
+		(!r, !m)
 	method to_string =
 		let a = Array.init (Array.length _layers) (fun i -> _layers.(i)#to_string) in
 		(string_of_float learn_rate) ^ (Stdlib.string_of_char separator) ^ (Stdlib.stringarray_to_string a separator) ^ (Stdlib.string_of_char separator) ^ (_output#to_string)
+	method nb_in = nperl.(0)
 end
 
 let parse str =

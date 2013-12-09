@@ -33,7 +33,7 @@ let learn () =
 	Printf.printf "char_count     %d\n" count;
 	Printf.printf "mat_size       %dx%d\n" size size;
 	Printf.printf "nb_iter        %d\n" iter;
-	let g = new Graph.graph 0.5 [|size * size ; size*size ; count |] in
+	let g = new Graph.graph 0.5 [|size * size ; size * 2 ; count |] in
 	let a = Array.init count (fun i -> Stdlib.string_to_intmat (read (i+1)) '|' ';') in
 	let a = Array.init count (fun i -> Stdlib.intmat_to_floatarr a.(i) ) in
 	let out = Array.make count 0. in
